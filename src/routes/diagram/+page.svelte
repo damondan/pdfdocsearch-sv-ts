@@ -7,11 +7,13 @@
 </div>
 
 <style lang="scss">
+  
   .container{
     background-color: #2196f3;
     background: linear-gradient(180deg, #2196f3, #f5f5f5); 
     min-height: 100vh;  // Changed from height to min-height
     width: 100vw;
+    border-radius: 4px;
     
 	.routing {
     padding: 10px;

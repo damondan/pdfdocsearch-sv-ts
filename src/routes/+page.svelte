@@ -27,6 +27,8 @@
   let checkedResults: PdfBookResult[] = [];
   let isCheckAll: boolean = $state(false);
   let pdfLimit: number = 25;
+  let totalCount: number = $state(0);
+  let totalCountBool: boolean = $state(false);
 
 // onMount - receives passed { data } = $props(); from +page.server.js - setDataPdfSubjects - these are Pdf 
 	// subjects and the first in the array is chosen to call the async function handleLoadPdfTitlesFromSubject(selectedSubject)
@@ -100,7 +102,8 @@ function handleLoadingChange(event:CustomEvent<boolean>): void {
 	//a PdfBookResult object that is than stored into a pdfBooksAsResultObjects array. 
 function handleLoadPdfDataFromPdfTab(event: CustomEvent): void {
   mySearchData = event.detail;
-   console.log('Received search results in parent(mySearchData):', mySearchData);
+  console.log('Received search results in parent(mySearchData):', mySearchData);
+  showTotalCount(mySearchData.total);
 
   if (mySearchData.results != null && Object.keys(mySearchData.results).length > 0) {
     pdfBooksRetFromSearch = Object.keys(mySearchData.results);
@@ -227,6 +230,11 @@ $effect(() => {
 function handleDeleteForPdfBlock(event:CustomEvent):void {
     const resultToDelete = event.detail; // Assuming PdfBlock emits the result
     pdfBooksAsResultObjects = pdfBooksAsResultObjects.filter((r) => r !== resultToDelete);
+    totalCount = pdfBooksAsResultObjects.length;
+}
+
+function showTotalCount(totalCnt: number){
+  totalCount = totalCnt;
 }
 
 </script>
@@ -246,6 +254,9 @@ function handleDeleteForPdfBlock(event:CustomEvent):void {
       id="download-id" 
       value="Download" 
       onclick={handleDownloadPdfsForPdfBlock} />
+      <div class= "total-count">
+        <p>Total Count is {totalCount}</p>
+      </div>
 		</div>
     {:else}
 	<div class="download-r-checkall-buttons">

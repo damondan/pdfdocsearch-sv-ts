@@ -51,7 +51,7 @@
 				}
 
 				const result:any = await response.json();
-				console.log(result);
+				
 				console.log('Search results:', result);
 
 				loading = false;
