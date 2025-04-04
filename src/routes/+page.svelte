@@ -37,14 +37,6 @@ onMount(() => {
     handleLoadPdfTitlesFromSubject(selectedSubject); // Automatically trigger the fetch for the first subject
   }
 });
-//The below 2 interfaces are configured to accept json data from the SearchBar.svelte
-//component. +page.svelte parent to <SearchBar.../> takes an on:searchResults(handleLoadPdfDataFromPdfTab), where
-//SearchBar calls handleSeach and dispatches the results ->dispatch('searchResults', result); mySearchData, which 
-//is the variable used to implement the below interfaces is configured to accept the json from event.detail
-interface IPdfBookResult {
-  pageNum: number;
-  text: string;
-}
 
 interface ISearchData{
   message: string;

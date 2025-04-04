@@ -4,7 +4,6 @@
 	import { previousSearchesWritable, searchQueryWritable } from '$lib/store.js';
 
 	let searchQuery: string = $state('');
-	let previousSearches: string[] = $state([]);
 	let { selectedSubject, pdfBookTitles } = $props();
 	let showDropdown = $state(false);
 	let loading: boolean = $state(false);

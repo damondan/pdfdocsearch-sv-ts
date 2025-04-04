@@ -30,7 +30,7 @@
                 const svgElement = containerDiv.querySelector("svg");
                 if (svgElement) {
                     if (type === "entity") {
-                        svgElement.style.width = "20%";
+                        svgElement.style.width = "100%";
                         svgElement.style.maxWidth = "700px";
                     } else if (type === "sequence") {
                         svgElement.style.width = "90%";

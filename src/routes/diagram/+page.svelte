@@ -24,11 +24,24 @@
          J[(MongoDB)]
      end
  
+    DUMMY[Admin - In Terminal load pdfs with command 
+    node scripts/import-pdfs.js ] --> K[scripts/import-pdfs.js]
+
+    subgraph "PDF Import"
+      K[scripts/import-pdfs.js] --> G
+      K --> H
+      K --> I
+	  end
+
      B --"HTTP Requests"--> E
      H --"Queries"--> J
      I --"Queries"--> J
   `;
-
+  // %% Custom Styling
+  //   style A fill:#f9f,stroke:#333,stroke-width:2px
+  //   style B fill:#ff9,stroke:#333,stroke-width:2px
+  //   style E fill:#9f9,stroke:#333,stroke-width:2px
+  //   style J fill:#9ff,stroke:#333,stroke-width:2px
   const sequenceDiagramDef = `
   sequenceDiagram
      actor User
@@ -53,35 +66,78 @@
   `;
 
 const entityDiagramDef = `
-  classDiagram
-     class Book {
-         +String subject
-         +String bookTitle
-         +String fileName
-         +Date importedAt
-         +Date updatedAt
-     }
-     
-     class Page {
-         +String subject
-         +String bookTitle
-         +Number pageNum
-         +String text
-         +Date importedAt
-         +Date updatedAt
-     }
-     
-     class PdfBookResult {
-         +String _bookTitle
-         +Number _pageNum
-         +String _sentence
-         +String _pageText
-         +Boolean _isChecked
-         +toString()
-     }
-     
-     Book "1" -- "many" Page : contains
-     Page .. PdfBookResult : transforms to`;
+  %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 
+  'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff' }}}%%
+classDiagram
+	class PdfBookResult {
+		+String _bookTitle
+		+Number _pageNum
+		+String _sentence
+		+String _pageText
+		+Boolean _isChecked
+		+toString()
+	}
+    
+	class Store {
+		+Writable searchQueryWritable
+		+Writable previousSearchesWritable
+	}
+    
+	class SearchBar {
+		+String searchQuery
+		+String selectedSubject
+		+Array pdfBookTitles
+		+Boolean showDropdown
+		+Boolean loading
+    +Number pdfLimit
+		+handleSearchDispatch()
+		+handleInputClick()
+		+handleSelectSearch()
+		+handleInputKeydown()
+		+updateSearch()
+	}
+    
+	class PageSvelteMain{
+		+String selectedSubject
+		+Array setDataPdfSubjects
+		+Writable pdfBooksGetFromSubject
+		+Array pdfBookCheckFromPdfTab
+		+Object mySearchData
+		+Boolean isLoading
+		+Array pdfBooksRetFromSearch
+		+Array pdfBooksAsResultObjects
+		+String activeTab
+		+Array checkedResults
+		+Boolean isCheckAll
+    +Number totalCount
+    +openTab()
+		+handleSubjectChange()
+		+handleLoadPdfTitlesFromSubject()
+		+handleLoadingChange()
+		+handleLoadPdfDataFromPdfTab()
+		+handleDownloadPdfsForPdfBlock()
+		+findSentenceForPdfPage()
+		+handleCheckboxChangeForPdfBlock()
+		+handleCheckAll()
+    +handleDeleteForPdfBlock()
+    +showTotalCount
+	}
+    
+	class PdfBlock {
+		+PdfBookResult result
+		+Boolean isExpanded
+		+Boolean checked
+		+handleBlockClick()
+		+handleCheckboxChangeDispatch()
+		+handleDeleteDispatch()
+	}
+    
+	Store --> SearchBar : provides state
+	Store --> PageSvelteMain : provides state
+	PageSvelteMain --> SearchBar : passes props
+	PageSvelteMain --> PdfBlock : passes props
+	PageSvelteMain "1" o-- "many" PdfBookResult : contains
+	PdfBlock "1" -- "1" PdfBookResult : displays`;
 
 </script>
 
@@ -155,7 +211,7 @@ const entityDiagramDef = `
     box-sizing: border-box;
     a {
       font-family: cursive;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 700;
       text-decoration: none;
       color: black;
