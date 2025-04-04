@@ -28,7 +28,6 @@
   let isCheckAll: boolean = $state(false);
   let pdfLimit: number = 25;
   let totalCount: number = $state(0);
-  let totalCountBool: boolean = $state(false);
 
 // onMount - receives passed { data } = $props(); from +page.server.js - setDataPdfSubjects - these are Pdf 
 	// subjects and the first in the array is chosen to call the async function handleLoadPdfTitlesFromSubject(selectedSubject)
