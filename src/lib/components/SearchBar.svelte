@@ -168,15 +168,14 @@
 		display: flex;
 		gap: 5px;
 		position: relative; /* Anchor for absolute dropdown */
-		margin-left: 20%;
-		margin-right: 20%;
+		width: 40%;
+		margin: 0 auto;
 		box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
 		input {
 			flex-grow: 1; /* Stretch input to fill space */
 			font-family:
-				'Cursive',
-				Comic sans-serif;
-			font-size: 18px;
+				Comic sans MS;
+			font-size: 20px;
 			padding: 8px;
 			border: 1px solid #ccc;
 			border-radius: 4px;
@@ -189,9 +188,8 @@
 			border: none;
 			border-radius: 4px;
 			font-family:
-				'Cursive',
-				Comic sans-serif;
-			font-size: 18px;
+				Comic sans MS;
+			font-size: 25px;
 			box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
 			&:hover {
 				background-color: rgb(15, 41, 175);

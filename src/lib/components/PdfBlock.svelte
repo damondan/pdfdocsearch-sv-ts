@@ -86,7 +86,7 @@
 			white-space: normal; /* Enables natural wrapping */
 			font-size: 18px;
 			font-weight: 700;
-			font-family: cursive;
+			font-family: Comic sans MS;
 			letter-spacing: 2px;
 		}
 

@@ -210,7 +210,7 @@ classDiagram
     padding: 10px;
     box-sizing: border-box;
     a {
-      font-family: cursive;
+      font-family: Comic sans MS;
       font-size: 20px;
       font-weight: 700;
       text-decoration: none;
@@ -232,7 +232,7 @@ classDiagram
     flex-direction: column;
     align-items: center;
     h1, h2 {
-      font-family: cursive;
+      font-family: Comic sans MS;
       color: #333;
       text-align: center;
     }
