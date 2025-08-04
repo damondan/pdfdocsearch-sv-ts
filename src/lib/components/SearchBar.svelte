@@ -42,7 +42,6 @@
 					},
 					body: JSON.stringify(payload)
 				});
-				
 
 				if (!response.ok) {
 					console.log('Server error: in response ok false');

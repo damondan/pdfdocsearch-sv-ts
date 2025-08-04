@@ -31,6 +31,7 @@
 	// subjects and the first in the array is chosen to call the async function handleLoadPdfTitlesFromSubject(selectedSubject)
 onMount(() => {
   if (setDataPdfSubjects.length > 0) {
+    console.log("In onMount");
     selectedSubject = setDataPdfSubjects[0]; // Set default to the first subject
     handleLoadPdfTitlesFromSubject(selectedSubject); // Automatically trigger the fetch for the first subject
   }
@@ -92,39 +93,6 @@ function handleLoadingChange(event:CustomEvent<boolean>): void {
 //function through it being used as an event listener with the data in results. mySearchData, being json data,
 //is taken in by mySearchData, which uses 2 interfaces to configure with the json data. Lastly, it steps through the array to input the pdf attributes into creating
 	//a PdfBookResult object that is than stored into a pdfBooksAsResultObjects array. 
-// function handleLoadPdfDataFromPdfTab(event: CustomEvent): void {
-//   mySearchData = event.detail;
-//   console.log('Received search results in parent(mySearchData):', mySearchData);
-//   showTotalCount(mySearchData.total);
-
-//   if (mySearchData.results != null && Object.keys(mySearchData.results).length > 0) {
-//     pdfBooksRetFromSearch = Object.keys(mySearchData.results);
-//     pdfBooksAsResultObjects = [];
-
-//     if (pdfBooksRetFromSearch != null) {
-//       for (let i = 0; i < pdfBooksRetFromSearch.length; i++) {
-//         const matches = mySearchData.results[pdfBooksRetFromSearch[i]];
-
-//         for (const { pageNum, text } of matches) {
-//           const sentence = findSentenceForPdfPage(text, $searchQueryWritable); // Assuming $searchQueryWritable is a string query
-//           pdfBooksAsResultObjects.push(
-//             new PdfBookResult(pdfBooksRetFromSearch[i], pageNum, sentence, text)
-//           );
-//         }
-//       }
-//     } else {
-//       pdfBooksAsResultObjects = [];
-//     }
-//   } else if (mySearchData == "noPdfCheckBoxesChecked"){
-// 			console.log("NO Pdfs chosen");
-// 			alert("Choose a Pdf.");
-// 		}else if (mySearchData == "pdfsOverLimit"){
-// 			alert("Pdf book search limit is " + pdfLimit);
-// 		}else{
-// 			alert("Search returned 0 for " + $searchQueryWritable);
-// 		}
-// }
-
 function handleLoadPdfDataFromPdfTab(event: CustomEvent): void {
   mySearchData = event.detail;
   console.log('Received search results in parent(mySearchData):', mySearchData);
