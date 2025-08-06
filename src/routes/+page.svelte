@@ -93,6 +93,10 @@ function handleLoadingChange(event:CustomEvent<boolean>): void {
 //function through it being used as an event listener with the data in results. mySearchData, being json data,
 //is taken in by mySearchData, which uses 2 interfaces to configure with the json data. Lastly, it steps through the array to input the pdf attributes into creating
 	//a PdfBookResult object that is than stored into a pdfBooksAsResultObjects array. 
+// Replace the existing handleLoadPdfDataFromPdfTab function with this updated version:
+
+// Replace the existing handleLoadPdfDataFromPdfTab function with this updated version:
+
 function handleLoadPdfDataFromPdfTab(event: CustomEvent): void {
   mySearchData = event.detail;
   console.log('Received search results in parent(mySearchData):', mySearchData);
@@ -100,11 +104,17 @@ function handleLoadPdfDataFromPdfTab(event: CustomEvent): void {
   // Type guard to check if it's a string
   if (typeof mySearchData === 'string') {
     // Handle string cases
-    if (mySearchData === "noPdfCheckBoxesChecked") {
+    if (mySearchData === "noSearchTermAndNoPdfs") {
+      console.log("Both search term and PDFs are missing");
+      alert("Add a Search Word and choose a Pdf book/books");
+    } else if (mySearchData === "noPdfCheckBoxesChecked") {
       console.log("NO Pdfs chosen");
       alert("Choose a Pdf.");
     } else if (mySearchData === "pdfsOverLimit") {
       alert("Pdf book search limit is " + pdfLimit);
+    } else if (mySearchData === "noSearchTerm") {
+      console.log("No search term provided");
+      alert("Add a Search Term");
     }
     return; // Exit early for string cases
   }

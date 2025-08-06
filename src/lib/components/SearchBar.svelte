@@ -11,65 +11,86 @@
 	const dispatch = createEventDispatcher();
 
 	// THis is a dispatch to the parent +page.svelte.
-	async function handleSearchDispatch() {
-		searchQueryWritable.set(searchQuery);
-		if (!searchQuery.trim()) {
-			console.error('Search query is empty');
-			return;
-		}
+	// Replace the existing handleSearchDispatch function with this updated version:
 
-		const normPdfTitles:string[] = [...pdfBookTitles];
-		updateSearch(searchQuery);
+// Replace the existing handleSearchDispatch function with this updated version:
 
-		const payload = {
-			selectedSubject,
-			searchQuery,
-			pdfBookTitles
-		};
-		console.log('normPdfTitles:', normPdfTitles, 'length:', normPdfTitles.length);
-		console.log('Payload before fetch:', payload);
-		console.log('JSON Payload:', JSON.stringify(payload));
+async function handleSearchDispatch() {
+	searchQueryWritable.set(searchQuery);
+	
+	const normPdfTitles: string[] = [...pdfBookTitles];
+	console.log('normPdfTitles:', normPdfTitles, 'length:', normPdfTitles.length);
 
-		if (normPdfTitles.length <= 25 && normPdfTitles.length != 0) {
-			try {
-				loading = true;
-				dispatch('loadingChange', loading);
-
-				const response = await fetch('http://localhost:3001/api/searchquery', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify(payload)
-				});
-
-				if (!response.ok) {
-					console.log('Server error: in response ok false');
-					throw new Error(`Server error: ${response.status}`);
-				}
-
-				const result:any = await response.json();
-				
-				console.log('Search results:', result);
-
-				loading = false;
-				dispatch('loadingChange', loading);
-				dispatch('searchResults', result);
-
-				// Clear input and hide dropdown after successful search
-				searchQuery = '';
-				showDropdown = false;
-			} catch (error) {
-				console.error('Error in handleSearch:', error);
-				loading = false;
-				dispatch('loadingChange', loading);
-			}
-		} else if (normPdfTitles.length == 0) {
-			dispatch('searchResults', 'noPdfCheckBoxesChecked');
-		} else {
-			dispatch('searchResults', 'pdfsOverLimit');
-		}
+	// Check if both search query and PDFs are missing
+	if (!searchQuery.trim() && normPdfTitles.length == 0) {
+		console.error('Both search query and PDFs are missing');
+		dispatch('searchResults', 'noSearchTermAndNoPdfs');
+		return;
 	}
+	
+	// Check if no PDFs are selected (but search query exists)
+	if (normPdfTitles.length == 0) {
+		dispatch('searchResults', 'noPdfCheckBoxesChecked');
+		return;
+	}
+	
+	// Check if PDFs are selected but no search query is provided
+	if (!searchQuery.trim()) {
+		console.error('Search query is empty but PDFs are selected');
+		dispatch('searchResults', 'noSearchTerm');
+		return;
+	}
+
+	// Check if too many PDFs are selected
+	if (normPdfTitles.length > 25) {
+		dispatch('searchResults', 'pdfsOverLimit');
+		return;
+	}
+
+	updateSearch(searchQuery);
+
+	const payload = {
+		selectedSubject,
+		searchQuery,
+		pdfBookTitles
+	};
+	console.log('Payload before fetch:', payload);
+	console.log('JSON Payload:', JSON.stringify(payload));
+
+	try {
+		loading = true;
+		dispatch('loadingChange', loading);
+
+		const response = await fetch('http://localhost:3001/api/searchquery', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(payload)
+		});
+
+		if (!response.ok) {
+			console.log('Server error: in response ok false');
+			throw new Error(`Server error: ${response.status}`);
+		}
+
+		const result: any = await response.json();
+		
+		console.log('Search results:', result);
+
+		loading = false;
+		dispatch('loadingChange', loading);
+		dispatch('searchResults', result);
+
+		// Clear input and hide dropdown after successful search
+		searchQuery = '';
+		showDropdown = false;
+	} catch (error) {
+		console.error('Error in handleSearch:', error);
+		loading = false;
+		dispatch('loadingChange', loading);
+	}
+}
 
 	// Show dropdown if there are previous searches
 	const handleInputClick = () => {
@@ -202,15 +223,16 @@
 			top: 100%; /* Position below input */
 			left: 0;
 			border-radius: 4px;
-			width: 240px; /* Match input width */
+			width: calc(100% - 5px - 110px); /* Full container width minus gap and button width */
 			list-style: none;
 			padding: 5px 0; /* Padding around list */
 			margin: 0;
-			z-index: 10; /* semi-colon expectedscss(css-semicolonexpected)Overlay other content */
+			z-index: 10;
 			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 		}
 
 		#search-dropdn li {
+			font-size: 20px;
 			background-color: #f9f9f9;
 			padding: 8px 12px; /* Rectangular padding */
 			border: 1px solid #000; /* Black border */
