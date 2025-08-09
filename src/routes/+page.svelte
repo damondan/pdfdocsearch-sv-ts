@@ -69,7 +69,8 @@ function handleSubjectChange(event: Event): void {
 //to return just the titles of those pdf books by subject which is the folder name.
 async function handleLoadPdfTitlesFromSubject(subject: string): Promise<void> {
   try {
-    const response = await fetch(`http://localhost:3001/api/pdf-titles/${subject}`);
+    //const response = await fetch(`http://localhost:3001/api/pdf-titles/${subject}`);
+    const response = await fetch(`/api/pdf-titles/${subject}`);
     const data: string[] = await response.json(); // Assuming the response is an array of PdfBookResult
 
     // Set the data to the writable store, defaulting to an empty array if no data is returned

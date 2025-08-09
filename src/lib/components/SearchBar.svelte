@@ -61,7 +61,7 @@ async function handleSearchDispatch() {
 		loading = true;
 		dispatch('loadingChange', loading);
 
-		const response = await fetch('http://localhost:3001/api/searchquery', {
+		const response = await fetch(`/api/searchquery`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
