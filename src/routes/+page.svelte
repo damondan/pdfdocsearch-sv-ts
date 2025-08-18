@@ -25,8 +25,8 @@
   let checkedResults: PdfBookResult[] = [];
   let isCheckAll: boolean = $state(false);
   let pdfLimit: number = 25;
-  let totalCount: number = $state(0);
-
+  //let totalCount: number = $state(0);
+let totalCount = $derived(pdfBooksAsResultObjects.length);
 // onMount - receives passed { data } = $props(); from +page.server.js - setDataPdfSubjects - these are Pdf 
 	// subjects and the first in the array is chosen to call the async function handleLoadPdfTitlesFromSubject(selectedSubject)
 onMount(() => {
@@ -69,6 +69,8 @@ function handleSubjectChange(event: Event): void {
 //to return just the titles of those pdf books by subject which is the folder name.
 async function handleLoadPdfTitlesFromSubject(subject: string): Promise<void> {
   try {
+    console.log("clearing pdfBooksAsResultObjects in handleLoadPdfTitlesFromSubject")
+    pdfBooksAsResultObjects = [];
     //const response = await fetch(`http://localhost:3001/api/pdf-titles/${subject}`);
     const response = await fetch(`/api/pdf-titles/${subject}`);
     const data: string[] = await response.json(); // Assuming the response is an array of PdfBookResult
@@ -121,12 +123,12 @@ function handleLoadPdfDataFromPdfTab(event: CustomEvent): void {
   }
   
   // Now TypeScript knows mySearchData is ISearchData, not a string
-  showTotalCount(mySearchData.total);
+  //showTotalCount(mySearchData.total);
 
   if (mySearchData.results != null && Object.keys(mySearchData.results).length > 0) {
     pdfBooksRetFromSearch = Object.keys(mySearchData.results);
     pdfBooksAsResultObjects = [];
-
+console.log("clearing pdfBooksAsResultObjects in handleLoadPdfDataFromPdfTab adding to the results objects")
     if (pdfBooksRetFromSearch != null) {
       for (let i = 0; i < pdfBooksRetFromSearch.length; i++) {
         const matches = mySearchData.results[pdfBooksRetFromSearch[i]];
@@ -140,6 +142,7 @@ function handleLoadPdfDataFromPdfTab(event: CustomEvent): void {
       }
     } else {
       pdfBooksAsResultObjects = [];
+      console.log("clearing pdfBooksAsResultObjects - else is null")
     }
   } else {
     alert("Search returned 0 for " + $searchQueryWritable);
@@ -243,12 +246,12 @@ $effect(() => {
 function handleDeleteForPdfBlock(event:CustomEvent):void {
     const resultToDelete = event.detail; // Assuming PdfBlock emits the result
     pdfBooksAsResultObjects = pdfBooksAsResultObjects.filter((r) => r !== resultToDelete);
-    totalCount = pdfBooksAsResultObjects.length;
+    //totalCount = pdfBooksAsResultObjects.length;
 }
 
-function showTotalCount(totalCnt: number){
-  totalCount = totalCnt;
-}
+// function showTotalCount(totalCnt: number){
+//   totalCount = totalCnt;
+// }
 
 </script>
 
@@ -261,24 +264,26 @@ function showTotalCount(totalCnt: number){
 		<a href="/">home</a>
 		<a href="/diagram">diagram</a>
 	</nav>
-	{#if activeTab == 'results'}
-		<div class="download-r-checkall-buttons">
-			<input type="button" 
+{#if activeTab == 'results'}
+  <div class="download-r-checkall-buttons">
+    <input type="button" 
       id="download-id" 
       value="Download" 
       onclick={handleDownloadPdfsForPdfBlock} />
-      <div class= "total-count">
-        <p>Total Count is {totalCount}</p>
-      </div>
-		</div>
-    {:else}
-	<div class="download-r-checkall-buttons">
-		<input type="checkbox" 
-		id="checkall-id" 
-		bind:checked={isCheckAll}
-        onchange={handleCheckAll}/>
-	</div>
-	{/if}
+    <div class="total-count">
+      <p style="min-width: 150px; overflow: visible; white-space: nowrap; margin: 0;">
+        Total Count is {totalCount}
+      </p>
+    </div>
+  </div>
+{:else}
+  <div class="download-r-checkall-buttons">
+    <input type="checkbox" 
+      id="checkall-id" 
+      bind:checked={isCheckAll}
+      onchange={handleCheckAll}/>
+  </div>
+{/if}
 	<div class="header">
 		<h1>Pdf Search TS</h1>
 		<SearchBar
