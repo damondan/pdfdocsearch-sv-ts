@@ -71,11 +71,9 @@ async function handleLoadPdfTitlesFromSubject(subject: string): Promise<void> {
   try {
     console.log("clearing pdfBooksAsResultObjects in handleLoadPdfTitlesFromSubject")
     pdfBooksAsResultObjects = [];
-    //const response = await fetch(`http://localhost:3001/api/pdf-titles/${subject}`);
     const response = await fetch(`/api/pdf-titles/${subject}`);
     const data: string[] = await response.json(); // Assuming the response is an array of PdfBookResult
 
-    // Set the data to the writable store, defaulting to an empty array if no data is returned
     pdfBooksGetFromSubject.set(data || []); 
   } catch (error) {
     console.error('Error fetching PDF titles:', error);
@@ -97,9 +95,6 @@ function handleLoadingChange(event:CustomEvent<boolean>): void {
 //is taken in by mySearchData, which uses 2 interfaces to configure with the json data. Lastly, it steps through the array to input the pdf attributes into creating
 	//a PdfBookResult object that is than stored into a pdfBooksAsResultObjects array. 
 // Replace the existing handleLoadPdfDataFromPdfTab function with this updated version:
-
-// Replace the existing handleLoadPdfDataFromPdfTab function with this updated version:
-
 function handleLoadPdfDataFromPdfTab(event: CustomEvent): void {
   mySearchData = event.detail;
   console.log('Received search results in parent(mySearchData):', mySearchData);
@@ -119,11 +114,8 @@ function handleLoadPdfDataFromPdfTab(event: CustomEvent): void {
       console.log("No search term provided");
       alert("Add a Search Term");
     }
-    return; // Exit early for string cases
+    return;
   }
-  
-  // Now TypeScript knows mySearchData is ISearchData, not a string
-  //showTotalCount(mySearchData.total);
 
   if (mySearchData.results != null && Object.keys(mySearchData.results).length > 0) {
     pdfBooksRetFromSearch = Object.keys(mySearchData.results);
@@ -188,7 +180,7 @@ const findSentenceForPdfPage = (text: string, subject: string): string => {
   const match = sentenceRegex.exec(text);
 
   if (match) {
-    return match[0].trim(); // Return the first matching sentence
+    return match[0].trim();
   } else {
     return `No sentence found containing "${errSubject}".`;
   }
@@ -224,15 +216,13 @@ function handleCheckboxChangeForPdfBlock(result: PdfBookResult, event: CustomEve
 //$derived rune functionality. If there is equality in the derived attributes, the isAllChecked is 
 //updated to true, to than execute and update the isCheckAll to true.  
 function handleCheckAll(event: Event): void {
-  const target = event.target as HTMLInputElement; // Cast event target to an HTMLInputElement
+  const target = event.target as HTMLInputElement;
 
   isCheckAll = target.checked;
   
   if (isCheckAll) {
-    // Assuming $pdfBooksGetFromSubject is an array of PdfBookResult objects
-    pdfBookCheckFromPdfTab = $pdfBooksGetFromSubject; // You need to define $pdfBooksGetFromSubject elsewhere
+    pdfBookCheckFromPdfTab = $pdfBooksGetFromSubject;
   } else {
-    // Uncheck all: clear the array
     pdfBookCheckFromPdfTab = [];
   }
 }
@@ -246,12 +236,7 @@ $effect(() => {
 function handleDeleteForPdfBlock(event:CustomEvent):void {
     const resultToDelete = event.detail; // Assuming PdfBlock emits the result
     pdfBooksAsResultObjects = pdfBooksAsResultObjects.filter((r) => r !== resultToDelete);
-    //totalCount = pdfBooksAsResultObjects.length;
 }
-
-// function showTotalCount(totalCnt: number){
-//   totalCount = totalCnt;
-// }
 
 </script>
 
