@@ -75,61 +75,64 @@ classDiagram
 		+String _sentence
 		+String _pageText
 		+Boolean _isChecked
-		+toString()
+		+toString(): String
 	}
     
 	class Store {
-		+Writable searchQueryWritable
-		+Writable previousSearchesWritable
+		+Writable~String~ searchQueryWritable
+		+Writable~String[]~ previousSearchesWritable
 	}
     
 	class SearchBar {
-		+String searchQuery
-		+String selectedSubject
-		+Array pdfBookTitles
-		+Boolean showDropdown
-		+Boolean loading
-    +Number pdfLimit
-		+handleSearchDispatch()
-		+handleInputClick()
-		+handleSelectSearch()
-		+handleInputKeydown()
-		+updateSearch()
+		[props] +String selectedSubject
+		[props] +Array~String~ pdfBookTitles
+		[reactive] +String searchQuery
+		[reactive] +Boolean showDropdown
+		[reactive] +Boolean loading
+		+Number pdfLimit
+		+handleSearchDispatch(): Promise~void~
+		+handleInputClick(): void
+		+handleSelectSearch(term: String): void
+		+handleInputKeydown(event: KeyboardEvent): void
+		+handleDelete(searchTerm: String): void
+		+updateSearch(searchWord: String): void
+		+handleClickOutside(event: Event): void
 	}
     
 	class PageSvelteMain{
-		+String selectedSubject
-		+Array setDataPdfSubjects
-		+Writable pdfBooksGetFromSubject
-		+Array pdfBookCheckFromPdfTab
-		+Object mySearchData
-		+Boolean isLoading
-		+Array pdfBooksRetFromSearch
-		+Array pdfBooksAsResultObjects
-		+String activeTab
-		+Array checkedResults
-		+Boolean isCheckAll
-    +Number totalCount
-    +openTab()
-		+handleSubjectChange()
-		+handleLoadPdfTitlesFromSubject()
-		+handleLoadingChange()
-		+handleLoadPdfDataFromPdfTab()
-		+handleDownloadPdfsForPdfBlock()
-		+findSentenceForPdfPage()
-		+handleCheckboxChangeForPdfBlock()
-		+handleCheckAll()
-    +handleDeleteForPdfBlock()
-    +showTotalCount
+		[props] +Object data
+		  └── dataPdfSubjects: string[]
+		[reactive] +String selectedSubject
+		+Array~String~ setDataPdfSubjects
+		+Writable~String[]~ pdfBooksGetFromSubject
+		[reactive] +Array~String~ pdfBookCheckFromPdfTab
+		[reactive] +Object mySearchData
+		[reactive] +Boolean isLoading
+		+Array~String~ pdfBooksRetFromSearch
+		[reactive] +Array~PdfBookResult~ pdfBooksAsResultObjects
+		[reactive] +String activeTab
+		+Array~PdfBookResult~ checkedResults
+		[reactive] +Boolean isCheckAll
+		[derived] +Number totalCount
+		+openTab(tabName: String): void
+		+handleSubjectChange(event: Event): void
+		+handleLoadPdfTitlesFromSubject(subject: String): Promise~void~
+		+handleLoadingChange(event: CustomEvent~Boolean~): void
+		+handleLoadPdfDataFromPdfTab(event: CustomEvent): void
+		+handleDownloadPdfsForPdfBlock(): void
+		+findSentenceForPdfPage(text: String, subject: String): String
+		+handleCheckboxChangeForPdfBlock(result: PdfBookResult, event: CustomEvent): void
+		+handleCheckAll(event: Event): void
+		+handleDeleteForPdfBlock(event: CustomEvent): void
 	}
     
 	class PdfBlock {
-		+PdfBookResult result
-		+Boolean isExpanded
-		+Boolean checked
-		+handleBlockClick()
-		+handleCheckboxChangeDispatch()
-		+handleDeleteDispatch()
+		[props] +PdfBookResult result
+		[reactive] +Boolean isExpanded
+		[reactive] +Boolean checked
+		+handleBlockClick(event: CustomEvent): void
+		+handleCheckboxChangeDispatch(event: CustomEvent): void
+		+handleDeleteDispatch(): void
 	}
     
 	Store --> SearchBar : provides state
@@ -138,7 +141,7 @@ classDiagram
 	PageSvelteMain --> PdfBlock : passes props
 	PageSvelteMain "1" o-- "many" PdfBookResult : contains
 	PdfBlock "1" -- "1" PdfBookResult : displays`;
-
+  
 </script>
 
 <!-- Use a completely independent container -->
