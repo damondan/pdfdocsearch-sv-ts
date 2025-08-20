@@ -178,7 +178,6 @@
 
     const link = document.createElement("a");
     link.href = url;
-    //link.download = "docsearchdownload-text.txt"; // Filename for the download
     link.download = `${$searchQueryWritable}-${today}-docsveltedwnld.txt`;
     document.body.appendChild(link);
     link.click();
