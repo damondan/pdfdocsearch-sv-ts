@@ -50,3 +50,6 @@ demo.spec.js is a test file commonly used in JavaScript testing frameworks
 like Vitest, Jest, Mocha, or Cypress. The .spec.js (short for "specification") 
 convention is used to define unit tests, integration tests, or end-to-end (E2E) 
 tests for your application.
+
+index.ts
+In src/lib/ directories, index.ts acts as a barrel file for clean imports:

@@ -1,12 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, derived } from "svelte/store";
+  import { writable } from "svelte/store";
   import type { Writable } from "svelte/store";
   import SearchBar from "$lib/components/SearchBar.svelte";
   import PdfBlock from "$lib/components/PdfBlock.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import { PdfBookResult } from "$lib/classes/PdfBookResult";
   import { searchQueryWritable } from "$lib/store.js";
+  import type {ISearchData} from "$lib";
 
   let selectedSubject = $state("");
   let { data }: { data: { dataPdfSubjects: string[] } } = $props();
@@ -36,16 +37,16 @@
     }
   });
 
-  interface ISearchData {
-    message: string;
-    results: {
-      [bookTitle: string]: Array<{
-        pageNum: number;
-        text: string;
-      }>;
-    } | null;
-    total: number;
-  }
+  // interface ISearchData {
+  //   message: string;
+  //   results: {
+  //     [bookTitle: string]: Array<{
+  //       pageNum: number;
+  //       text: string;
+  //     }>;
+  //   } | null;
+  //   total: number;
+  // }
 
   function openTab(tabName: string): void {
     console.log("Open tab:", tabName);
@@ -67,12 +68,9 @@
   //handleLoadPdfTitlesFromSubject - takes a subject as argument and calls the node.js docker container api
   //to return just the titles of those pdf books by subject which is the folder name.
   async function handleLoadPdfTitlesFromSubject(
-    subject: string
-  ): Promise<void> {
+    subject: string): Promise<void> {
+
     try {
-      console.log(
-        "clearing pdfBooksAsResultObjects in handleLoadPdfTitlesFromSubject"
-      );
       pdfBooksAsResultObjects = [];
       const response = await fetch(`/api/pdf-titles/${subject}`);
       const data: string[] = await response.json(); // Assuming the response is an array of PdfBookResult
