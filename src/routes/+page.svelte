@@ -27,6 +27,7 @@
   let isCheckAll: boolean = $state(false);
   let pdfLimit: number = 25;
   let totalCount = $derived(pdfBooksAsResultObjects.length);
+
   // onMount - receives passed { data } = $props(); from +page.server.js - setDataPdfSubjects - these are Pdf
   // subjects and the first in the array is chosen to call the async function handleLoadPdfTitlesFromSubject(selectedSubject)
   onMount(() => {
@@ -36,17 +37,6 @@
       handleLoadPdfTitlesFromSubject(selectedSubject); // Automatically trigger the fetch for the first subject
     }
   });
-
-  // interface ISearchData {
-  //   message: string;
-  //   results: {
-  //     [bookTitle: string]: Array<{
-  //       pageNum: number;
-  //       text: string;
-  //     }>;
-  //   } | null;
-  //   total: number;
-  // }
 
   function openTab(tabName: string): void {
     console.log("Open tab:", tabName);

@@ -1,1 +1,10 @@
-// place files you want to import through the `$lib` alias in this folder.
+  export interface ISearchData {
+    message: string;
+    results: {
+      [bookTitle: string]: Array<{
+        pageNum: number;
+        text: string;
+      }>;
+    } | null;
+    total: number;
+  }

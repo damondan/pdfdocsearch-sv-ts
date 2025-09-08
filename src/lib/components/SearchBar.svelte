@@ -7,7 +7,7 @@
 	let { selectedSubject, pdfBookTitles } = $props();
 	let showDropdown = $state(false);
 	let loading: boolean = $state(false);
-	const pdfLimit: number = 25;
+	const pdfLimit: number = 40;
 	const dispatch = createEventDispatcher();
 
 	// THis is a dispatch to the parent +page.svelte.
@@ -42,7 +42,7 @@ async function handleSearchDispatch() {
 	}
 
 	// Check if too many PDFs are selected
-	if (normPdfTitles.length > 25) {
+	if (normPdfTitles.length > pdfLimit) {
 		dispatch('searchResults', 'pdfsOverLimit');
 		return;
 	}
