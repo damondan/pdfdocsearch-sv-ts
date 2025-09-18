@@ -302,6 +302,7 @@
       </div>
     {/if}
   </div>
+  {#if activeTab !== "results"}
   <div class="pdfsubjects-dropdnlist">
     <label for="pdf-options" id="pdf-label">PDF Subjects:</label>
     <select onchange={handleSubjectChange}>
@@ -311,6 +312,7 @@
       {/each}
     </select>
   </div>
+  {/if}
   <div class="tab-bar">
     <div class="w3-row">
       <a href="javascript:void(0)" onclick={() => openTab("pdfs")}>

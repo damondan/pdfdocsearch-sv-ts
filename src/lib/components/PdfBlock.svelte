@@ -4,7 +4,7 @@
 	let { result } = $props();
 	let isExpanded: boolean = $state(false);
 	const dispatch = createEventDispatcher();
-	let checked: boolean = $state(result?.isChecked ?? false);
+	let checked = $derived(result?.isChecked ?? false);
 
   //If the clicked element is inside the .pdf-checkbox - returns without expansion of the page text
   //Outside of that, the click expands the page text. 
@@ -20,8 +20,7 @@
 	function handleCheckboxChangeDispatch(event: CustomEvent) {
 		console.log('in handleCheckboxChangeDispatch');
 		const target = event.target as HTMLInputElement;
-		checked = target.checked;
-		result.isChecked = checked;
+		result.isChecked = target.checked;
 		dispatch('change', { result, checked });
 	}
 
@@ -34,7 +33,7 @@
 <div class="pdf-block" onclick={handleBlockClick}>
 	<input
 		type="checkbox"
-		bind:checked
+		bind:checked ={result.isChecked}
 		class="pdf-checkbox"
 		onchange={(e) => {
 			e.stopPropagation();

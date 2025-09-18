@@ -1,15 +1,38 @@
-import { env } from '$env/dynamic/private';
-import { json, type RequestEvent } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
+import { getBookTitlesBySubject } from '../../../../db/models/book.js';
 
-export async function GET({ params, fetch }: RequestEvent) {
+/**
+ * SvelteKit API route handler for getting PDF titles by subject
+ * @param params - SvelteKit request parameters
+ * @param params.request - Web API Request object
+ * @param params.params - Route parameters containing subject
+ * @returns Response with PDF titles array or error message
+ */
+export const GET: RequestHandler = async ({ request, params }) => {
+  try {
     const { subject } = params;
     
-    try {
-        const response = await fetch(`${env.VITE_API_URL_GETPDFTITLES || 'http://localhost:3001/api/pdf-titles'}/${subject}`);
-        const data: string[] = await response.json();
-        return json(data || []);
-    } catch (error) {
-        console.error('Error fetching PDF titles:', error);
-        return json([], { status: 500 });
+    if (!subject) {
+      return new Response(JSON.stringify({ error: 'Subject parameter is required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
-}
+
+    const pdfTitles = await getBookTitlesBySubject(subject);
+    
+    return new Response(JSON.stringify(pdfTitles), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+  } catch (error) {
+    console.error(`API Error fetching PDF titles for ${params.subject}:`, error);
+    return new Response(JSON.stringify({ error: 'Failed to fetch PDF titles' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+};
