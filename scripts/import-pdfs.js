@@ -1,5 +1,5 @@
 // scripts/import-pdfs.js
-const ATLAS_URI = 'mongodb+srv://damon5185:gxq6uwm3U2fnMR1o@clustersearchpdf.37gzhel.mongodb.net/?retryWrites=true&w=majority&appName=ClusterSearchPdf';
+const ATLAS_URI = 'mongodb+srv://damon5185:D27934GvIkHalIef@clustersearchpdf.37gzhel.mongodb.net/?retryWrites=true&w=majority&appName=ClusterSearchPdf';
 const fs = require('fs').promises;
 const path = require('path');
 const pdfjsLib = require('pdfjs-dist');
@@ -121,8 +121,7 @@ async function importPdfs() {
     const baseDir = path.join(__dirname, '..');
     
     // Specify the subject folders we're looking for
-    const subjectFolders = ['ProgramLanguages'];
-   // const subjectFolders = ['Jung', 'ProgramLanguages', 'NonFiction'];
+    const subjectFolders = ['Jung', 'ProgramLanguages', 'NonFiction'];
     const subjects = [];
     
     // Check if each subject folder exists

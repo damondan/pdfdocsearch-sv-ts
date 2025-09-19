@@ -1,0 +1,58 @@
+MongoDB Atlas deployment
+
+
+vitest-setup-client.ts
+In a SvelteKit or Vite project using Vitest for testing, 
+vitest-setup-client.js is a setup file that runs before your 
+test files execute. It is used to configure global settings, 
+mocks, or polyfills needed for your tests.
+
+vite.config.ts (configures Vites build system)
+vite.config.js is the configuration file for Vite, which is the 
+build tool used by SvelteKit (and many modern frontend frameworks). 
+It defines plugins, aliases, environment variables, and custom build settings.
+ex. Setting base path for a subdirectory deployment, Configuring Env variabls 
+for Production, Using a Reverse Proxy for API's(different domain), Optimizing for
+performance
+
+svelte.config.ts (Configuring sveltekit itself)
+svelte.config.js is the main configuration file for SvelteKit. It controls how 
+your SvelteKit app builds, deploys, and handles server-side rendering (SSR). 
+This file is essential when setting up adapters, preprocessors, and project 
+settings.
+The adapter determines how SvelteKit builds the app for deployment.
+Common adapters:
+
+    @sveltejs/adapter-auto (default, auto-detects Vercel, Netlify, etc.)
+    @sveltejs/adapter-static (for static sites like GitHub Pages)
+    @sveltejs/adapter-node (for running as a Node.js app)
+    @sveltejs/adapter-vercel (for Vercel hosting)
+    @sveltejs/adapter-cloudflare (for Cloudflare Workers)
+
+package-json
+Project metadata (name, version, etc.)
+Dependencies (dependencies, devDependencies)
+Scripts (start, build, test)
+Configs (type: module, etc.)
+
+package-lock.json
+Ensures that every developer uses the exact same dependency versions for 
+stability.
+Exact versions of dependencies and sub-dependencies.
+Checksums for integrity verification.
+A complete dependency tree.
+
+jsconfig.json
+jsconfig.json is a configuration file used in JavaScript projects to provide 
+better IntelliSense, autocompletion, and module resolution in VS Code. It's 
+especially useful in projects that don't use TypeScript (tsconfig.json is its 
+TypeScript counterpart).
+
+demo.spec.js
+demo.spec.js is a test file commonly used in JavaScript testing frameworks 
+like Vitest, Jest, Mocha, or Cypress. The .spec.js (short for "specification") 
+convention is used to define unit tests, integration tests, or end-to-end (E2E) 
+tests for your application.
+
+index.ts
+In src/lib/ directories, index.ts acts as a barrel file for clean imports:
