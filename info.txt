@@ -1,5 +1,7 @@
 MongoDB Atlas deployment
 
+Pdf Books path
+.gitignore, import-pdfs.js
 
 vitest-setup-client.ts
 In a SvelteKit or Vite project using Vitest for testing, 

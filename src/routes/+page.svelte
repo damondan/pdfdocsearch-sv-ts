@@ -6,7 +6,7 @@
   import PdfBlock from "$lib/components/PdfBlock.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import { PdfBookResult } from "$lib/classes/PdfBookResult";
-  import { searchQueryWritable } from "$lib/store.js";
+  import { searchQueryWritable } from "$lib/store";
   import type {ISearchData} from "$lib";
 
   let selectedSubject = $state("");

@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { getSubjects } from '../db/models/book.js';
+import { getSubjects } from '../db/models/book';
 
 /**
  * Loads PDF subjects data directly from database

@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 import type { SearchRequestBody, SearchResponse, ErrorResponse } from '$lib/types';
-import { searchPages } from '../../../db/models/page.js';
+import { searchPages } from '../../../db/models/page';
 
 /**
  * SvelteKit API route handler for searching PDFs

@@ -1,5 +1,5 @@
 // api/subjects/+server.js - GET /api/subjects endpoint
-import { getSubjects } from '../../../db/models/book.js';
+import { getSubjects } from '../../../db/models/book';
 
 /**
  * SvelteKit API route handler to get all subjects

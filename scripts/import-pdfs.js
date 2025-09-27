@@ -1,15 +1,24 @@
 // scripts/import-pdfs.js
 const ATLAS_URI = 'mongodb+srv://damon5185:D27934GvIkHalIef@clustersearchpdf.37gzhel.mongodb.net/?retryWrites=true&w=majority&appName=ClusterSearchPdf';
-const fs = require('fs').promises;
-const path = require('path');
-const pdfjsLib = require('pdfjs-dist');
-const { MongoClient } = require('mongodb');
+
+// ES Module imports (changed from require)
+import fs from 'fs/promises';
+import path from 'path';
+import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { MongoClient } from 'mongodb';
+// CHANGED: Added ES module imports for __dirname replacement
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// CHANGED: ES module replacement for __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 let client;
 let db;
 
 // Configure PDF.js for Node environment
-pdfjsLib.GlobalWorkerOptions.workerSrc = ''; 
+GlobalWorkerOptions.workerSrc = 'pdfjs-dist/legacy/build/pdf.worker.mjs'; 
 
 // Create a custom Node.js compatible document loader
 const NodeCanvasFactory = {
@@ -118,10 +127,11 @@ async function importPdfs() {
     await pageModel.createIndexes();
     
     // Get all directories (subjects)
+    // CHANGED: Now uses ES module __dirname replacement
     const baseDir = path.join(__dirname, '..');
     
     // Specify the subject folders we're looking for
-    const subjectFolders = ['Jung', 'ProgramLanguages', 'NonFiction'];
+    const subjectFolders = ['ProgramLanguages', 'NonFiction', 'Jung'];
     const subjects = [];
     
     // Check if each subject folder exists
@@ -169,7 +179,8 @@ async function importPdfs() {
           const dataBuffer = await fs.readFile(pdfPath);
           
           // Configure PDF.js with Node.js friendly options
-          const loadingTask = pdfjsLib.getDocument({
+          // CHANGED: Updated to use getDocument from named import
+          const loadingTask = getDocument({
             data: new Uint8Array(dataBuffer),
             canvasFactory: NodeCanvasFactory,
             disableFontFace: true,

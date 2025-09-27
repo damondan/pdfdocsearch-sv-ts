@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types';
-import { getBookTitlesBySubject } from '../../../../db/models/book.js';
+import { getBookTitlesBySubject } from '../../../../db/models/book';
 
 /**
  * SvelteKit API route handler for getting PDF titles by subject
