@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    @apply h-full;
+  }
+}
+
+@layer components {
+  /* Simple spinner utility for small inline spinners */
+  .tw-spinner-sm {
+    @apply inline-block h-6 w-6 rounded-full border-4 border-gray-200 border-t-spinner animate-spin;
+  }
+  .tw-spinner-overlay {
+    @apply fixed inset-0 z-[9999] flex items-center justify-center;
+  }
+  .tw-spinner-lg {
+    @apply h-12 w-12 rounded-full border-8 border-gray-200 border-t-spinner animate-spin shadow-md;
+  }
+}
+
+
