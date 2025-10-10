@@ -1,4 +1,5 @@
 <script lang="ts">
+  import '../app.css';
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import type { Writable } from "svelte/store";
@@ -28,13 +29,15 @@
   let pdfLimit: number = 25;
   let totalCount = $derived(pdfBooksAsResultObjects.length);
 
-  // onMount - receives passed { data } = $props(); from +page.server.js - setDataPdfSubjects - these are Pdf
-  // subjects and the first in the array is chosen to call the async function handleLoadPdfTitlesFromSubject(selectedSubject)
+  // onMount - receives passed { data } = $props(); from +page.server.js - setDataPdfSubjects
+  // - these are Pdf subjects and the first in the array is chosen to call the async
+  // function handleLoadPdfTitlesFromSubject(selectedSubject)
   onMount(() => {
     if (setDataPdfSubjects.length > 0) {
       console.log("In onMount");
       selectedSubject = setDataPdfSubjects[0]; // Set default to the first subject
-      handleLoadPdfTitlesFromSubject(selectedSubject); // Automatically trigger the fetch for the first subject
+      // Automatically trigger the fetch for the first subject
+      handleLoadPdfTitlesFromSubject(selectedSubject);
     }
   });
 
@@ -49,21 +52,24 @@
     selectedSubject = subject;
 
     if (subject) {
-      handleLoadPdfTitlesFromSubject(subject); // Trigger fetching based on subject
+      // Trigger fetching based on subject
+      handleLoadPdfTitlesFromSubject(subject);
     } else {
       pdfBooksGetFromSubject.set([]); // Clear the PDF books if no subject is selected
     }
   }
 
-  //handleLoadPdfTitlesFromSubject - takes a subject as argument and calls the node.js docker container api
-  //to return just the titles of those pdf books by subject which is the folder name.
+  //handleLoadPdfTitlesFromSubject - takes a subject as argument and calls the node.js
+  //docker container api to return just the titles of those pdf books by subject which
+  //is the folder name.
   async function handleLoadPdfTitlesFromSubject(
     subject: string): Promise<void> {
 
     try {
       pdfBooksAsResultObjects = [];
       const response = await fetch(`/api/pdf-titles/${subject}`);
-      const data: string[] = await response.json(); // Assuming the response is an array of PdfBookResult
+      // Assuming the response is an array of PdfBookResult
+      const data: string[] = await response.json();
 
       pdfBooksGetFromSubject.set(data || []);
     } catch (error) {
@@ -71,20 +77,23 @@
     }
   }
 
-  //This refers to the spinner - it is an event listener for the +page.svelte component or parent that is set
-  // in the SearchBar component below - on:loadingChange={handleLoadingChange}
+  //This refers to the spinner - it is an event listener for the +page.svelte component
+  //or parent that is set in the SearchBar component below - on:loadingChange={handleLoadingChange}
   //SearchBar component dispatches - dispatch('loadingChange', loading); loading is a boolean.
   //Below there is an - if isLoading is true or false which displays the spinner.
   function handleLoadingChange(event: CustomEvent<boolean>): void {
     isLoading = event.detail;
   }
 
-  //This is also an event listener for +page.svelte or the parent component to the SearchBar child component.
-  //SearchBar below on:searchResults={handleLoadPdfDataFromPdfTab}. In SearchBar component - dispatch('searchResults', result);
-  //The result is passed as searchResults and when that variable is set with the results, it executes the below
-  //function through it being used as an event listener with the data in results. mySearchData, being json data,
-  //is taken in by mySearchData, which uses 2 interfaces to configure with the json data. Lastly, it steps through the array to input the pdf attributes into creating
-  //a PdfBookResult object that is than stored into a pdfBooksAsResultObjects array.
+  //This is also an event listener for +page.svelte or the parent component to the
+  //SearchBar child component. SearchBar below on:searchResults={handleLoadPdfDataFromPdfTab}.
+  //In SearchBar component - dispatch('searchResults', result);
+  //The result is passed as searchResults and when that variable is set with the results,
+  //it executes the below function through it being used as an event listener with the data
+  //in results. mySearchData, being json data, is taken in by mySearchData, which uses 2
+  //interfaces to configure with the json data. Lastly, it steps through the array to
+  //input the pdf attributes into creating a PdfBookResult object that is than stored into
+  //a pdfBooksAsResultObjects array.
   // Replace the existing handleLoadPdfDataFromPdfTab function with this updated version:
   function handleLoadPdfDataFromPdfTab(event: CustomEvent): void {
     mySearchData = event.detail;
@@ -118,7 +127,8 @@
       pdfBooksRetFromSearch = Object.keys(mySearchData.results);
       pdfBooksAsResultObjects = [];
       console.log(
-        "clearing pdfBooksAsResultObjects in handleLoadPdfDataFromPdfTab adding to the results objects"
+        "clearing pdfBooksAsResultObjects in handleLoadPdfDataFromPdfTab adding to the " +
+        "results objects"
       );
       if (pdfBooksRetFromSearch != null) {
         for (let i = 0; i < pdfBooksRetFromSearch.length; i++) {
@@ -157,7 +167,8 @@
     const checkedResultsBlob = checkedResults
       .map(
         (result) =>
-          `${result.bookTitle}, Page ${result.pageNum}: ${result.sentence}\n\n${result.pageText}\n`
+          `${result.bookTitle}, Page ${result.pageNum}: ${result.sentence}\n\n` +
+          `${result.pageText}\n`
       )
       .join("\n");
 
@@ -193,11 +204,13 @@
     }
   };
 
-  //handleCheckboxChangeForPdfBlock is an event listener for the +page.svelte component or parent
-  // to the PdfBlock component or child.
-  //Below -> <PdfBlock {result} on:delete={handleDeleteForPdfBlock} on:change={(e) => handleCheckboxChangeForPdfBlock(result, e)}
-  //The parent listens for a dipatch from PdfBlock -> dispatch('change', { result, checked }); checkedResults is set with
-  //the proper array of PdfBookResult which has been checked in the Results tab.
+  //handleCheckboxChangeForPdfBlock is an event listener for the +page.svelte component
+  //or parent to the PdfBlock component or child.
+  //Below -> <PdfBlock {result} on:delete={handleDeleteForPdfBlock}
+  //on:change={(e) => handleCheckboxChangeForPdfBlock(result, e)}
+  //The parent listens for a dipatch from PdfBlock -> dispatch('change', { result, checked });
+  //checkedResults is set with the proper array of PdfBookResult which has been checked
+  //in the Results tab.
   function handleCheckboxChangeForPdfBlock(
     result: PdfBookResult,
     event: CustomEvent
@@ -221,10 +234,12 @@
   }
 
   //This checks all of the pdf book titles from the pdf tab.
-  //<input type="checkbox" id="checkall-id" bind:checked={isCheckAll} onchange={handleCheckAll}/>
-  // If the Pdf tab is open, this checkbox will appear. isCheckAll is initialized on change from a
-  //$derived rune functionality. If there is equality in the derived attributes, the isAllChecked is
-  //updated to true, to than execute and update the isCheckAll to true.
+  //<input type="checkbox" id="checkall-id" bind:checked={isCheckAll}
+  //onchange={handleCheckAll}/>
+  // If the Pdf tab is open, this checkbox will appear. isCheckAll is initialized on
+  //change from a $derived rune functionality. If there is equality in the derived
+  //attributes, the isAllChecked is updated to true, to than execute and update the
+  //isCheckAll to true.
   function handleCheckAll(event: Event): void {
     const target = event.target as HTMLInputElement;
 
@@ -257,39 +272,53 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
 </svelte:head>
 
-<div class="container">
-  <nav class="routing">
-    <a href="/">home</a>
-    <a href="/diagram">diagram</a>
+<div 
+  class="grid grid-cols-3 grid-rows-[auto_auto_auto_1fr_auto] gap-1
+  bg-gradient-to-b from-primary to-secondary p-1 min-h-screen relative
+  [grid-template-areas:'routing_routing_routing'
+  'header_header_header'
+  'download-r-checkall-buttons_tab-bar_pdfsubjects-dropdnlist'
+  'tab-content_tab-content_tab-content'
+  'footer_footer_footer']">
+  <nav class="[grid-area:routing] h-[15px] p-0">
+    <a href="/" 
+       class="font-comic text-xl font-bold no-underline text-black p-1
+       transition-all duration-300 hover:text-white hover:bg-spinner hover:rounded">home</a>
+    <a href="/diagram" 
+       class="font-comic text-xl font-bold no-underline text-black p-1
+       transition-all duration-300 hover:text-white hover:bg-spinner hover:rounded">diagram</a>
   </nav>
   {#if activeTab == "results"}
-    <div class="download-r-checkall-buttons">
+    <div class="[grid-area:download-r-checkall-buttons] flex justify-start items-end ml-[15%]">
       <input
         type="button"
         id="download-id"
         value="Download"
         onclick={handleDownloadPdfsForPdfBlock}
+        class="text-xs text-white scale-150 cursor-pointer border-[#333333]
+        bg-[#3e228c] hover:bg-[#3206de] rounded-md ml-5 mb-1 font-comic shadow-soft"
       />
-      <div class="total-count">
-        <p
-          style="min-width: 150px; overflow: visible; white-space: nowrap; margin: 0;"
-        >
+      <div class="total-count w-36 h-10 ml-12 rounded-md">
+        <p class="w-full text-black font-comic font-light text-lg text-center
+           min-w-36 overflow-visible whitespace-nowrap m-0">
           Total Count is {totalCount}
         </p>
       </div>
     </div>
   {:else}
-    <div class="download-r-checkall-buttons">
+    <div class="[grid-area:download-r-checkall-buttons] flex justify-start items-end ml-[15%]">
       <input
         type="checkbox"
         id="checkall-id"
         bind:checked={isCheckAll}
         onchange={handleCheckAll}
+        class="w-5 h-5 scale-150 cursor-pointer ml-5 mb-2 shadow-soft"
       />
     </div>
   {/if}
-  <div class="header">
-    <h1>Pdf Search TS</h1>
+  <div class="header [grid-area:header] text-base text-blue-500 text-center">
+    <h1 class="font-comic text-5xl text-white tracking-wider font-normal" 
+        style="text-shadow: 0px 8px 8px rgba(0, 0, 0, 0.3);">Pdf Search TS</h1>
     <SearchBar
       {selectedSubject}
       pdfBookTitles={pdfBookCheckFromPdfTab}
@@ -297,30 +326,33 @@
       on:loadingChange={handleLoadingChange}
     />
     {#if isLoading}
-      <div class="spinner-overlay">
-        <div class="spinner"></div>
+      <div class="spinner-overlay tw-spinner-overlay">
+        <div class="spinner custom-spinner"></div>
       </div>
     {/if}
   </div>
   {#if activeTab !== "results"}
-  <div class="pdfsubjects-dropdnlist">
-    <label for="pdf-options" id="pdf-label">PDF Subjects:</label>
-    <select onchange={handleSubjectChange}>
+  <div class="pdfsubjects-dropdnlist [grid-area:pdfsubjects-dropdnlist] text-base flex
+       flex-col items-end justify-end mr-[15%] w-50 ml-auto">
+    <label for="pdf-options" id="pdf-label" 
+           class="pdf-label self-start mb-1 text-center w-full text-xl font-black
+           font-comic tracking-wider2 text-gray-900">PDF Subjects:</label>
+    <select onchange={handleSubjectChange} class="w-full p-1 border border-gray-300 rounded-md bg-gray-100">
       <!-- <option value="" disabled>Select a subject</option> -->
       {#each setDataPdfSubjects as pdfSubject}
-        <option id="pdfsubject" value={pdfSubject}>{pdfSubject}</option>
+        <option id="pdfsubject" class="pdfsubject font-comic text-2xl" value={pdfSubject}>{pdfSubject}</option>
       {/each}
     </select>
   </div>
   {/if}
-  <div class="tab-bar">
-    <div class="w3-row">
+  <div class="tab-bar [grid-area:tab-bar] w-full flex justify-center bg-white
+       h-10 rounded-md mt-2">
+    <div class="w3-row w-full rounded-md">
       <a href="javascript:void(0)" onclick={() => openTab("pdfs")}>
         <div
-          class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding {activeTab ===
-          'pdfs'
-            ? 'active w3-border-green'
-            : ''}"
+          class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding
+          w-1/2 rounded-md text-lg font-comic tracking-wider2 font-normal
+          {activeTab === 'pdfs' ? 'active w3-border-green' : ''}"
           style="text-align:center;"
         >
           Pdfs
@@ -328,10 +360,9 @@
       </a>
       <a href="javascript:void(0)" onclick={() => openTab("results")}>
         <div
-          class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding {activeTab ===
-          'results'
-            ? 'active w3-border-green'
-            : ''}"
+          class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding
+          w-1/2 rounded-md text-lg font-comic tracking-wider2 font-normal
+          {activeTab === 'results' ? 'active w3-border-green' : ''}"
           style="text-align:center;"
         >
           Results
@@ -339,24 +370,24 @@
       </a>
     </div>
   </div>
-  <div class="tab-content">
+  <div class="tab-content [grid-area:tab-content] w-[90%] ml-[5%] mr-[5%] bg-white p-2 rounded-lg">
     <div
       id="pdfs"
       class="w3-container tab"
       style:display={activeTab === "pdfs" ? "block" : "none"}
     >
       {#if $pdfBooksGetFromSubject.length > 0}
-        <ul class="pdf-titles-list">
+        <ul class="pdf-titles-list list-none p-0 m-0 text-left">
           {#each $pdfBooksGetFromSubject as title}
-            <li class="pdf-title-block">
+            <li class="pdf-title-block mb-2 border-b border-gray-300 pb-1 hover:bg-gray-100">
               <input
                 type="checkbox"
                 id={title}
-                class="pdf-title-item"
+                class="pdf-title-item w-4 h-4 my-0 mx-2 scale-150 cursor-pointer"
                 bind:group={pdfBookCheckFromPdfTab}
                 value={title}
               />
-              <label for={title} class="pdf-title-label">{title}</label>
+              <label for={title} class="pdf-title-label text-xl font-bold font-comic tracking-wider2">{title}</label>
             </li>
           {/each}
         </ul>
@@ -378,11 +409,8 @@
     </div>
   </div>
 
-  <div class="footer">
+  <div class="footer [grid-area:footer]">
     <Footer />
   </div>
 </div>
 
-<style lang="scss">
-  @use "$lib/styles/mpage.scss";
-</style>
