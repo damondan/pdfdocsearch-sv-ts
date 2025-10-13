@@ -1,5 +1,4 @@
 <script lang="ts">
-  import '../app.css';
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import type { Writable } from "svelte/store";
@@ -272,18 +271,11 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
 </svelte:head>
 
-<div 
-  class="grid grid-cols-3 grid-rows-[auto_auto_auto_1fr_auto] gap-1
-  bg-gradient-to-b from-primary to-secondary p-1 min-h-screen relative
-  [grid-template-areas:'routing_routing_routing'
-  'header_header_header'
-  'download-r-checkall-buttons_tab-bar_pdfsubjects-dropdnlist'
-  'tab-content_tab-content_tab-content'
-  'footer_footer_footer']">
+<div class="grid grid-cols-3 grid-rows-[auto_auto_auto_1fr_auto] gap-1 bg-gradient-to-b from-primary to-secondary p-1 min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_header_header'_'download-r-checkall-buttons_tab-bar_pdfsubjects-dropdnlist'_'tab-content_tab-content_tab-content'_'footer_footer_footer']">
   <nav class="[grid-area:routing] h-[15px] p-0">
     <a href="/" 
-       class="font-comic text-xl font-bold no-underline text-black p-1
-       transition-all duration-300 hover:text-white hover:bg-spinner hover:rounded">home</a>
+       class="font-comic text-xl font-bold no-underline text-black p-1 transition-all duration-300 
+       hover:text-white hover:bg-spinner hover:rounded">home</a>
     <a href="/diagram" 
        class="font-comic text-xl font-bold no-underline text-black p-1
        transition-all duration-300 hover:text-white hover:bg-spinner hover:rounded">diagram</a>

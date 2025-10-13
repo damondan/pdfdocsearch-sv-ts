@@ -1,53 +1,15 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  /* Custom Colors */
   --color-primary: #2196f3;
   --color-secondary: #f5f5f5;
   --color-spinner: #007bff;
   
-  /* Custom Fonts */
-  --font-family-comic: "Comic sans MS", sans-serif;
-  --font-family-georgia: Georgia, serif;
+  --font-family-comic: 'Comic Sans MS', sans-serif;
+  --font-family-georgia: 'Georgia', serif;
   
-  /* Custom Letter Spacing */
   --letter-spacing-wider2: 0.125em;
   
-  /* Custom Box Shadows */
-  --shadow-soft: 0 8px 8px rgba(0,0,0,0.2);
+  --shadow-soft: 0 8px 8px rgba(0, 0, 0, 0.2);
 }
-
-@layer base {
-  html, body {
-    @apply h-full;
-  }
-}
-
-@layer base {
-  /* Custom background gradient for body */
-  body {
-    @apply bg-gradient-to-b from-primary to-secondary;
-  }
-}
-
-@layer components {
-  /* Simple spinner utility for small inline spinners */
-  .tw-spinner-sm {
-    @apply inline-block h-6 w-6 rounded-full border-4 border-gray-200 border-t-spinner animate-spin;
-  }
-  .tw-spinner-overlay {
-    @apply fixed inset-0 z-[9999] flex items-center justify-center;
-  }
-  .tw-spinner-lg {
-    @apply h-12 w-12 rounded-full border-8 border-gray-200 border-t-spinner animate-spin shadow-md;
-  }
-  
-  /* Custom spinner matching the SCSS original */
-  .custom-spinner {
-    @apply w-12 h-12 border-4 border-gray-200 border-t-spinner rounded-full animate-spin;
-    @apply fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[9999];
-    @apply shadow-soft;
-  }
-}
-
 
