@@ -281,7 +281,7 @@
        transition-all duration-300 hover:text-white hover:bg-spinner hover:rounded">diagram</a>
   </nav>
   {#if activeTab == "results"}
-    <div class="[grid-area:download-r-checkall-buttons] flex justify-start items-end ml-[15%]">
+    <div class="[grid-area:download-r-checkall-buttons] flex justify-start items-end ml-[15%] pb-2">
       <input
         type="button"
         id="download-id"
@@ -298,7 +298,7 @@
       </div>
     </div>
   {:else}
-    <div class="[grid-area:download-r-checkall-buttons] flex justify-start items-end ml-[15%]">
+    <div class="[grid-area:download-r-checkall-buttons] flex justify-start items-end ml-[15%] pb-2">
       <input
         type="checkbox"
         id="checkall-id"
@@ -342,7 +342,7 @@
     <div class="w3-row w-full rounded-md">
       <a href="javascript:void(0)" onclick={() => openTab("pdfs")}>
         <div
-          class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding
+          class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding
           w-1/2 rounded-md text-lg font-comic tracking-wider2 font-normal
           {activeTab === 'pdfs' ? 'active w3-border-green' : ''}"
           style="text-align:center;"
@@ -352,7 +352,7 @@
       </a>
       <a href="javascript:void(0)" onclick={() => openTab("results")}>
         <div
-          class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding
+          class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding
           w-1/2 rounded-md text-lg font-comic tracking-wider2 font-normal
           {activeTab === 'results' ? 'active w3-border-green' : ''}"
           style="text-align:center;"
@@ -379,7 +379,7 @@
                 bind:group={pdfBookCheckFromPdfTab}
                 value={title}
               />
-              <label for={title} class="pdf-title-label text-xl font-bold font-comic tracking-wider2">{title}</label>
+              <label for={title} class="pdf-title-label text-xl font-bold font-comic tracking-wider2 pl-4">{title}</label>
             </li>
           {/each}
         </ul>

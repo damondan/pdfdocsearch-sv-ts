@@ -212,7 +212,7 @@
 		flex-grow: 1; /* Stretch input to fill space */
 		font-family: Comic sans MS;
 		font-size: 20px;
-		color: red;
+		color: black;
 		padding: 8px;
 		border: 1px solid #ccc;
 		border-radius: 4px;
