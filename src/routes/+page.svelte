@@ -7,7 +7,7 @@
   import Footer from "$lib/components/Footer.svelte";
   import { PdfBookResult } from "$lib/classes/PdfBookResult";
   import { searchQueryWritable } from "$lib/store";
-  import type {ISearchData} from "$lib";
+  import type { ISearchData } from "$lib";
 
   let selectedSubject = $state("");
   let { data }: { data: { dataPdfSubjects: string[] } } = $props();
@@ -62,8 +62,8 @@
   //docker container api to return just the titles of those pdf books by subject which
   //is the folder name.
   async function handleLoadPdfTitlesFromSubject(
-    subject: string): Promise<void> {
-
+    subject: string,
+  ): Promise<void> {
     try {
       pdfBooksAsResultObjects = [];
       const response = await fetch(`/api/pdf-titles/${subject}`);
@@ -98,7 +98,7 @@
     mySearchData = event.detail;
     console.log(
       "Received search results in parent(mySearchData):",
-      mySearchData
+      mySearchData,
     );
 
     // Type guard to check if it's a string
@@ -127,7 +127,7 @@
       pdfBooksAsResultObjects = [];
       console.log(
         "clearing pdfBooksAsResultObjects in handleLoadPdfDataFromPdfTab adding to the " +
-        "results objects"
+          "results objects",
       );
       if (pdfBooksRetFromSearch != null) {
         for (let i = 0; i < pdfBooksRetFromSearch.length; i++) {
@@ -140,8 +140,8 @@
                 pdfBooksRetFromSearch[i],
                 pageNum,
                 sentence,
-                text
-              )
+                text,
+              ),
             );
           }
         }
@@ -161,13 +161,13 @@
   //checkedResults is formatted below to set the downloaded text in a more readable manner.
   function handleDownloadPdfsForPdfBlock(): void {
     console.log("In handleDownloadPdfsForPdfBlock");
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
 
     const checkedResultsBlob = checkedResults
       .map(
         (result) =>
           `${result.bookTitle}, Page ${result.pageNum}: ${result.sentence}\n\n` +
-          `${result.pageText}\n`
+          `${result.pageText}\n`,
       )
       .join("\n");
 
@@ -212,7 +212,7 @@
   //in the Results tab.
   function handleCheckboxChangeForPdfBlock(
     result: PdfBookResult,
-    event: CustomEvent
+    event: CustomEvent,
   ): void {
     console.log("IN handleCheckboxChangeForPdfBlock");
     result.isChecked = event.detail.checked;
@@ -253,7 +253,7 @@
 
   let isAllChecked = $derived(
     pdfBookCheckFromPdfTab.length === $pdfBooksGetFromSubject.length &&
-      $pdfBooksGetFromSubject.length > 0
+      $pdfBooksGetFromSubject.length > 0,
   );
   $effect(() => {
     isCheckAll = isAllChecked;
@@ -262,7 +262,7 @@
   function handleDeleteForPdfBlock(event: CustomEvent): void {
     const resultToDelete = event.detail; // Assuming PdfBlock emits the result
     pdfBooksAsResultObjects = pdfBooksAsResultObjects.filter(
-      (r) => r !== resultToDelete
+      (r) => r !== resultToDelete,
     );
   }
 </script>
@@ -271,17 +271,27 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
 </svelte:head>
 
-<div class="grid grid-cols-3 grid-rows-[auto_auto_auto_1fr_auto] gap-1 bg-gradient-to-b from-primary to-secondary p-1 min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_header_header'_'download-r-checkall-buttons_tab-bar_pdfsubjects-dropdnlist'_'tab-content_tab-content_tab-content'_'footer_footer_footer']">
+<div
+  class="grid grid-cols-3 grid-rows-[auto_auto_auto_1fr_auto] gap-1 bg-gradient-to-b from-primary to-secondary p-1
+min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_header_header'_'download-r-checkall-buttons_tab-bar_pdfsubjects-dropdnlist'_'tab-content_tab-content_tab-content'_'footer_footer_footer']"
+>
   <nav class="[grid-area:routing] h-[15px] p-0">
-    <a href="/" 
-       class="font-comic text-xl font-bold no-underline text-black p-1 transition-all duration-300 
-       hover:text-white hover:bg-spinner hover:rounded">home</a>
-    <a href="/diagram" 
-       class="font-comic text-xl font-bold no-underline text-black p-1
-       transition-all duration-300 hover:text-white hover:bg-spinner hover:rounded">diagram</a>
+    <a
+      href="/"
+      class="font-comic text-xl font-bold no-underline text-black p-1 transition-all duration-300
+       hover:text-white hover:bg-spinner hover:rounded">home</a
+    >
+    <a
+      href="/diagram"
+      class="font-comic text-xl font-bold no-underline text-black p-1
+       transition-all duration-300 hover:text-white hover:bg-spinner hover:rounded"
+      >diagram</a
+    >
   </nav>
   {#if activeTab == "results"}
-    <div class="[grid-area:download-r-checkall-buttons] flex justify-start items-end ml-[15%] pb-2">
+    <div
+      class="[grid-area:download-r-checkall-buttons] flex justify-start items-end ml-[15%] pb-2"
+    >
       <input
         type="button"
         id="download-id"
@@ -291,14 +301,18 @@
         bg-[#3e228c] hover:bg-[#3206de] rounded-md ml-5 mb-1 font-comic shadow-soft"
       />
       <div class="total-count w-36 h-10 ml-12 rounded-md">
-        <p class="w-full text-black font-comic font-light text-lg text-center
-           min-w-36 overflow-visible whitespace-nowrap m-0">
+        <p
+          class="w-full text-black font-comic font-light text-lg text-center
+           min-w-36 overflow-visible whitespace-nowrap m-0"
+        >
           Total Count is {totalCount}
         </p>
       </div>
     </div>
   {:else}
-    <div class="[grid-area:download-r-checkall-buttons] flex justify-start items-end ml-[15%] pb-2">
+    <div
+      class="[grid-area:download-r-checkall-buttons] flex justify-start items-end ml-[15%] pb-2"
+    >
       <input
         type="checkbox"
         id="checkall-id"
@@ -308,9 +322,13 @@
       />
     </div>
   {/if}
-  <div class="header [grid-area:header] text-base text-blue-500 text-center">
-    <h1 class="font-comic text-5xl text-white tracking-wider font-normal" 
-        style="text-shadow: 0px 8px 8px rgba(0, 0, 0, 0.3);">Pdf Search TS</h1>
+  <div class="header [grid-area:header] text-blue-500 text-center">
+    <h1
+      class="font-comic text-6xl text-white tracking-wider font-normal"
+      style="text-shadow: 0px 8px 8px rgba(0, 0, 0, 0.3);"
+    >
+      Pdf Search TS
+    </h1>
     <SearchBar
       {selectedSubject}
       pdfBookTitles={pdfBookCheckFromPdfTab}
@@ -324,28 +342,41 @@
     {/if}
   </div>
   {#if activeTab !== "results"}
-  <div class="pdfsubjects-dropdnlist [grid-area:pdfsubjects-dropdnlist] text-base flex
-       flex-col items-end justify-end mr-[15%] w-50 ml-auto">
-    <label for="pdf-options" id="pdf-label" 
-           class="pdf-label self-start mb-1 text-center w-full text-xl font-black
-           font-comic tracking-wider2 text-gray-900">PDF Subjects:</label>
-    <select onchange={handleSubjectChange} class="w-full p-1 border border-gray-300 rounded-md bg-gray-100">
-      <!-- <option value="" disabled>Select a subject</option> -->
-      {#each setDataPdfSubjects as pdfSubject}
-        <option id="pdfsubject" class="pdfsubject font-comic text-2xl" value={pdfSubject}>{pdfSubject}</option>
-      {/each}
-    </select>
-  </div>
+    <div
+      class="pdfsubjects-dropdnlist [grid-area:pdfsubjects-dropdnlist] text-base flex
+       flex-col items-end justify-end mr-[15%] w-50 ml-auto"
+    >
+      <label
+        for="pdf-options"
+        id="pdf-label"
+        class="pdf-label self-start mb-1 text-center w-full text-xl font-black
+           font-comic tracking-wider2 text-gray-900">PDF Subjects:</label
+      >
+      <select
+        onchange={handleSubjectChange}
+        class="w-full p-1 border border-gray-300 rounded-md bg-gray-100 text-base sm:text-lg md:text-xl lg:text-2xl font-comic"
+      >
+        <!-- <option value="" disabled>Select a subject</option> -->
+        {#each setDataPdfSubjects as pdfSubject}
+          <option
+            id="pdfsubject"
+            class="pdfsubject font-comic"
+            value={pdfSubject}>{pdfSubject}</option
+          >
+        {/each}
+      </select>
+    </div>
   {/if}
-  <div class="tab-bar [grid-area:tab-bar] w-full flex justify-center bg-white
-       h-10 rounded-md mt-2">
+  <div
+    class="tab-bar [grid-area:tab-bar] w-full flex justify-center bg-white
+       h-10 rounded-md mt-2"
+  >
     <div class="w3-row w-full rounded-md">
       <a href="javascript:void(0)" onclick={() => openTab("pdfs")}>
         <div
           class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding
-          w-1/2 rounded-md text-lg font-comic tracking-wider2 font-normal
-          {activeTab === 'pdfs' ? 'active w3-border-green' : ''}"
-          style="text-align:center;"
+          w-1/2 rounded-md text-base sm:text-lg md:text-xl lg:text-2xl font-comic tracking-wider2 font-normal
+          text-center {activeTab === 'pdfs' ? 'active w3-border-green' : ''}"
         >
           Pdfs
         </div>
@@ -353,7 +384,7 @@
       <a href="javascript:void(0)" onclick={() => openTab("results")}>
         <div
           class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding
-          w-1/2 rounded-md text-lg font-comic tracking-wider2 font-normal
+          w-1/2 rounded-md text-base sm:text-lg md:text-xl lg:text-2xl font-comic tracking-wider2 font-normal
           {activeTab === 'results' ? 'active w3-border-green' : ''}"
           style="text-align:center;"
         >
@@ -362,24 +393,32 @@
       </a>
     </div>
   </div>
-  <div class="tab-content [grid-area:tab-content] w-[90%] ml-[5%] mr-[5%] bg-white p-2 rounded-lg">
+  <div
+    class="tab-content [grid-area:tab-content] w-[90%] ml-[5%] mr-[5%] bg-white p-2 rounded-lg"
+  >
     <div
       id="pdfs"
-      class="w3-container tab"
+      class="w3-container tab w-full max-w-full overflow-hidden"
       style:display={activeTab === "pdfs" ? "block" : "none"}
     >
       {#if $pdfBooksGetFromSubject.length > 0}
-        <ul class="pdf-titles-list list-none p-0 m-0 text-left">
+        <ul class="pdf-titles-list list-none p-0 m-0 text-left w-full">
           {#each $pdfBooksGetFromSubject as title}
-            <li class="pdf-title-block mb-2 border-b border-gray-300 pb-1 hover:bg-gray-100">
+            <li
+              class="pdf-title-block mb-2 border-b border-gray-300 pb-1 hover:bg-gray-100 flex items-start gap-2 w-full max-w-full"
+            >
               <input
                 type="checkbox"
                 id={title}
-                class="pdf-title-item w-4 h-4 my-0 mx-2 scale-150 cursor-pointer"
+                class="pdf-title-item w-4 h-4 mt-1 scale-150 cursor-pointer flex-shrink-0"
                 bind:group={pdfBookCheckFromPdfTab}
                 value={title}
               />
-              <label for={title} class="pdf-title-label text-xl font-bold font-comic tracking-wider2 pl-4">{title}</label>
+              <label
+                for={title}
+                class="pdf-title-label text-base sm:text-lg md:text-xl lg:text-2xl font-bold font-comic tracking-wider2 break-words overflow-wrap-anywhere leading-tight flex-1 cursor-pointer min-w-0 max-w-full overflow-hidden"
+                >{title}</label
+              >
             </li>
           {/each}
         </ul>
@@ -388,7 +427,7 @@
 
     <div
       id="results"
-      class="w3-container tab"
+      class="w3-container tab w-full max-w-full overflow-hidden"
       style:display={activeTab === "results" ? "block" : "none"}
     >
       {#each pdfBooksAsResultObjects as result}
@@ -405,4 +444,3 @@
     <Footer />
   </div>
 </div>
-

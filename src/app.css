@@ -1,6 +1,8 @@
-@import 'tailwindcss';
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
-@theme {
+:root {
   --color-primary: #2196f3;
   --color-secondary: #f5f5f5;
   --color-spinner: #007bff;

@@ -161,7 +161,8 @@
 	}
 </script>
 
-<div class="search-bar">
+<div class="search-bar flex gap-1 relative w-[90%] max-w-[600px] mx-auto 
+			shadow-soft md:w-[60%] lg:w-[40%]">
 	<!-- Input Field with Click Event -->
 	<input
 		type="text"
@@ -172,10 +173,13 @@
 		on:click={handleInputClick}
 		on:keydown={handleInputKeydown}
 		autocomplete="off"
-	/>
+	class="flex-grow font-comic text-base sm:text-lg md:text-xl lg:text-2xl text-black p-2 border border-gray-300 rounded"/>
 
 	<!-- Search Button -->
-	<button on:click={handleSearchDispatch}>Search</button>
+	<button 
+		on:click={handleSearchDispatch}
+	class="bg-blue-600 hover:bg-blue-800 text-white px-3 py-2 rounded font-comic text-base sm:text-lg md:text-xl lg:text-2xl shadow-soft cursor-pointer"
+	>Search</button>
 
 	{#if loading}
 		<div class="spinner"></div>
@@ -183,12 +187,18 @@
 
 	<!-- Dropdown Menu -->
 	{#if showDropdown && $previousSearchesWritable.length > 0}
-		<ul id="search-dropdn" class="dropdn-menu">
+		<ul id="search-dropdn" class="dropdn-menu absolute bg-white top-full left-0 rounded 
+								w-[calc(100%-5px-110px)] list-none py-1 m-0 z-10 shadow-md">
 			{#each $previousSearchesWritable as term}
-				<li on:click={() => handleSelectSearch(term)}>
-					{term}
+				<li 
+					on:click={() => handleSelectSearch(term)}
+					class="text-xl bg-gray-50 hover:bg-gray-200 p-2 border border-black 
+						rounded mx-1 my-0.5 cursor-pointer flex justify-between items-center"
+				>
+					<span>{term}</span>
 					<button
-						class="searchquery-delete"
+						class="searchquery-delete bg-red-500 hover:bg-red-700 text-white px-1 
+						rounded text-sm cursor-pointer"
 						on:click|stopPropagation={() => handleDelete(term)}
 						>X</button
 					>
@@ -198,79 +208,3 @@
 	{/if}
 </div>
 
-<style>
-	.search-bar {
-		display: flex;
-		gap: 5px;
-		position: relative; /* Anchor for absolute dropdown */
-		width: 40%;
-		margin: 0 auto;
-		box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
-	}
-
-	input {
-		flex-grow: 1; /* Stretch input to fill space */
-		font-family: Comic sans MS;
-		font-size: 20px;
-		color: black;
-		padding: 8px;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-	}
-
-	button {
-		background-color: #0056b3;
-		color: white;
-		padding: 8px 16px;
-		border: none;
-		border-radius: 4px;
-		font-family: Comic sans MS;
-		font-size: 25px;
-		box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
-		&:hover {
-			background-color: rgb(15, 41, 175);
-		}
-		cursor: pointer;
-	}
-
-	.dropdn-menu {
-		position: absolute;
-		background-color: #fff; /* White background */
-		top: 100%; /* Position below input */
-		left: 0;
-		border-radius: 4px;
-		width: calc(
-			100% - 5px - 110px
-		); /* Full container width minus gap and button width */
-		list-style: none;
-		padding: 5px 0; /* Padding around list */
-		margin: 0;
-		z-index: 10;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-	}
-
-	#search-dropdn li {
-		font-size: 20px;
-		background-color: #f9f9f9;
-		padding: 8px 12px; /* Rectangular padding */
-		border: 1px solid #000; /* Black border */
-		border-radius: 4px;
-		margin: 2px 5px; /* Space between items */
-		&:hover {
-			background-color: #e0e0e0; /* Hover effect */
-		}
-		cursor: pointer;
-	}
-	.searchquery-delete {
-		background-color: #ff4d4d;
-		color: white;
-		float: right;
-		padding: 0 4px;
-		border: none;
-		border-radius: 4px;
-		&:hover {
-			background-color: #cc0000;
-		}
-		cursor: pointer;
-	}
-</style>
