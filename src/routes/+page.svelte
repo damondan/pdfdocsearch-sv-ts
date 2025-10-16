@@ -275,19 +275,6 @@
   class="grid grid-cols-3 grid-rows-[auto_auto_auto_1fr_auto] gap-1 bg-gradient-to-b from-primary to-secondary p-1
 min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_header_header'_'download-r-checkall-buttons_tab-bar_pdfsubjects-dropdnlist'_'tab-content_tab-content_tab-content'_'footer_footer_footer']"
 >
-  <nav class="[grid-area:routing] h-[15px] p-0">
-    <a
-      href="/"
-      class="font-comic text-xl font-bold no-underline text-black p-1 transition-all duration-300
-       hover:text-white hover:bg-spinner hover:rounded">home</a
-    >
-    <a
-      href="/diagram"
-      class="font-comic text-xl font-bold no-underline text-black p-1
-       transition-all duration-300 hover:text-white hover:bg-spinner hover:rounded"
-      >diagram</a
-    >
-  </nav>
   {#if activeTab == "results"}
     <div class="[grid-area:download-r-checkall-buttons] flex flex-col sm:flex-row justify-start items-start sm:items-end ml-[15%] pb-2 gap-2">
       <input
