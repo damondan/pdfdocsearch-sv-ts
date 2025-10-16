@@ -289,23 +289,19 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
     >
   </nav>
   {#if activeTab == "results"}
-    <div
-      class="[grid-area:download-r-checkall-buttons] flex justify-start items-end ml-[15%] pb-2"
-    >
+    <div class="[grid-area:download-r-checkall-buttons] flex flex-col sm:flex-row justify-start items-start sm:items-end ml-[15%] pb-2 gap-2">
       <input
         type="button"
         id="download-id"
         value="Download"
         onclick={handleDownloadPdfsForPdfBlock}
-        class="text-xs text-white scale-150 cursor-pointer border-[#333333]
+        class="text-base sm:text-lg md:text-xl lg:text-2xl text-white px-4 py-2 cursor-pointer border-[#333333]
         bg-[#3e228c] hover:bg-[#3206de] rounded-md ml-5 mb-1 font-comic shadow-soft"
       />
-      <div class="total-count w-36 h-10 ml-12 rounded-md">
-        <p
-          class="w-full text-black font-comic font-light text-lg text-center
-           min-w-36 overflow-visible whitespace-nowrap m-0"
-        >
-          Total Count is {totalCount}
+      <div class="total-count w-auto sm:w-36 h-auto sm:h-10 ml-5 sm:ml-0 rounded-md">
+        <p class="w-full text-black font-comic font-light text-base sm:text-lg md:text-xl lg:text-2xl text-left sm:text-center
+           overflow-visible whitespace-nowrap m-0">
+          Results {totalCount}
         </p>
       </div>
     </div>
@@ -375,7 +371,7 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
       <a href="javascript:void(0)" onclick={() => openTab("pdfs")}>
         <div
           class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding
-          w-1/2 rounded-md text-base sm:text-lg md:text-xl lg:text-2xl font-comic tracking-wider2 font-normal
+          w-1/2 rounded-md text-base sm:text-lg md:text-xl lg:text-2xl font-comic tracking-wider2 font-normal bg-white
           text-center {activeTab === 'pdfs' ? 'active w3-border-green' : ''}"
         >
           Pdfs
@@ -384,9 +380,8 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
       <a href="javascript:void(0)" onclick={() => openTab("results")}>
         <div
           class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding
-          w-1/2 rounded-md text-base sm:text-lg md:text-xl lg:text-2xl font-comic tracking-wider2 font-normal
-          {activeTab === 'results' ? 'active w3-border-green' : ''}"
-          style="text-align:center;"
+          w-1/2 rounded-md text-base sm:text-lg md:text-xl lg:text-2xl font-comic tracking-wider2 font-normal bg-white
+          text-center {activeTab === 'results' ? 'active w3-border-green' : ''}"
         >
           Results
         </div>
@@ -394,7 +389,7 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
     </div>
   </div>
   <div
-    class="tab-content [grid-area:tab-content] w-[90%] ml-[5%] mr-[5%] bg-white p-2 rounded-lg"
+    class="tab-content [grid-area:tab-content] w-[90%] ml-[5%] mr-[5%] bg-white p-2 rounded-lg mt-3"
   >
     <div
       id="pdfs"

@@ -30,97 +30,28 @@
 	}
 </script>
 
-<div class="pdf-block" onclick={handleBlockClick}>
+<div class="pdf-block grid grid-cols-[auto_1fr_auto] w-full items-center p-3 border-b border-gray-300 hover:bg-gray-100 cursor-pointer" onclick={handleBlockClick}>
 	<input
 		type="checkbox"
 		bind:checked={result.isChecked}
-		class="pdf-checkbox"
+		class="pdf-checkbox w-4 h-4 mx-3 pr-1 scale-150 cursor-pointer"
 		onchange={(e) => {
 			e.stopPropagation();
 			handleCheckboxChangeDispatch(e);
 		}}
 	/>
-	<p>{result.bookTitle} {result.pageNum} {result.sentence}</p>
+	<p class="m-0 px-3 overflow-hidden break-words whitespace-normal text-base sm:text-lg md:text-xl lg:text-2xl font-bold font-comic tracking-wider2">{result.bookTitle} {result.pageNum} {result.sentence}</p>
 	<button
-		class="pdf-delete"
+		class="pdf-delete w-5 h-5 p-0 text-xs leading-5 text-center bg-red-500 hover:bg-red-700 text-white border-none rounded cursor-pointer"
 		onclick={(e) => {
 			e.stopPropagation();
 			handleDeleteDispatch();
 		}}>X</button
 	>
 	{#if isExpanded}
-		<div class="pdf-page-text">
-			<p>{result.pageText || "No text available"}</p>
+		<div class="pdf-page-text col-span-full w-full mt-3 bg-red-100 p-3">
+			<p class="m-0 break-words whitespace-normal overflow-visible text-base sm:text-lg md:text-xl lg:text-2xl font-comic">{result.pageText || "No text available"}</p>
 		</div>
 	{/if}
 </div>
 
-<style>
-	.pdf-block {
-		display: grid;
-		grid-template-columns: auto 1fr auto; /* Checkbox, content, button */
-		width: 100%;
-		align-items: center;
-		padding: 10px;
-		border-bottom: 1px solid #ccc;
-		box-sizing: border-box;
-		&:hover {
-			background-color: #f5f5f5; /* Hover feedback */
-		}
-		cursor: pointer;
-	}
-	.pdf-checkbox {
-		width: 15px;
-		height: 15px;
-		margin: 0 10px;
-		padding-right: 4px;
-		transform: scale(1.5);
-		cursor: pointer;
-	}
-
-	p {
-		margin: 0;
-		padding: 0 10px;
-		overflow: hidden;
-		word-wrap: break-word; /* Allows long words to break */
-		white-space: normal; /* Enables natural wrapping */
-		font-size: 18px;
-		font-weight: 700;
-		font-family: Comic sans MS;
-		letter-spacing: 2px;
-	}
-
-	.pdf-delete {
-		width: 20px;
-		height: 20px;
-		padding: 0;
-		font-size: 10px;
-		line-height: 20px;
-		text-align: center;
-		background-color: #ff4d4d;
-		color: white;
-		border: none;
-		border-radius: 3px;
-		cursor: pointer;
-
-		&:hover {
-			background-color: #cc0000;
-		}
-	}
-
-	.pdf-page-text {
-		grid-column: 1 / -1;
-		width: 100%;
-		margin-top: 10px;
-		background-color: #f0e3e3;
-		padding: 10px;
-	}
-
-	p {
-		margin: 0;
-		word-wrap: break-word;
-		white-space: normal; /* Allows full text to wrap */
-		overflow: visible; /* Ensures no clipping */
-		text-overflow: clip; /* Removes ellipsis for expanded text */
-	}
-</style>
