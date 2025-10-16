@@ -4,143 +4,60 @@
   // Define your diagrams
   const componentDiagramDef = `
   graph TB
-     subgraph "Frontend (SvelteKit)"
-         A[SearchBar.svelte] --> B[+page.svelte]
-         C[PdfBlock.svelte] --> B
-         P[PdfBookResult.js] --> B
-         ST[store.js] --> A
-         ST --> B
+     subgraph "GitHub Pages"
+         PORT[Portfolio Website<br/>portfolioDD76JS] 
      end
- 
-     subgraph "Backend (Node.js)"
-         D[server.js] --> E[api.js]
-         E --> F[logic.js]
-         F --> G[db/connection.js]
-         G --> H[db/models/book.js]
-         G --> I[db/models/page.js]
-     end
- 
-     subgraph "Database"
-         J[(MongoDB)]
-     end
- 
-    DUMMY[Admin - In Terminal load pdfs with command 
-    node scripts/import-pdfs.js ] --> K[scripts/import-pdfs.js]
 
-    subgraph "PDF Import"
-      K[scripts/import-pdfs.js] --> G
-      K --> H
-      K --> I
-	  end
+     subgraph "Railway Hosting"
+         subgraph "SvelteKit App (pdfdocsearch-sv-ts)"
+             A[SearchBar.svelte] --> B[+page.svelte]
+             C[PdfBlock.svelte] --> B
+             P[PdfBookResult.js] --> B
+             ST[store.js] --> A
+             ST --> B
+             
+             subgraph "API Routes"
+                 API1["api/searchquery/+server.ts"]
+                 API2["api/pdf-titles/+server.ts"] 
+                 API3["api/subjects/+server.ts"]
+             end
+             
+             subgraph "Database Models"
+                 H[db/models/book.ts]
+                 I[db/models/page.ts]
+                 CONN[db/mongodb.ts]
+             end
+         end
+     end
+ 
+     subgraph "MongoDB Atlas"
+         J[(Database<br/>books & pages collections)]
+     end
+ 
+     subgraph "Setup Process"
+         ADMIN[Admin runs:<br/>node scripts/import-pdfs.js]
+         K[scripts/import-pdfs.js]
+     end
 
-     B --"HTTP Requests"--> E
+     PORT --"User clicks link"--> B
+     B --"Internal requests"--> API1
+     B --"Internal requests"--> API2
+     B --"Internal requests"--> API3
+     API1 --> CONN
+     API2 --> CONN
+     API3 --> CONN
+     CONN --> H
+     CONN --> I
      H --"Queries"--> J
      I --"Queries"--> J
+     ADMIN --> K
+     K --"Imports PDF data"--> J
   `;
   // %% Custom Styling
   //   style A fill:#f9f,stroke:#333,stroke-width:2px
   //   style B fill:#ff9,stroke:#333,stroke-width:2px
   //   style E fill:#9f9,stroke:#333,stroke-width:2px
   //   style J fill:#9ff,stroke:#333,stroke-width:2px
-  const sequenceDiagramDef = `
-  sequenceDiagram
-     actor User
-     participant Frontend as SvelteKit Frontend
-     participant API as Node.js API
-     participant DB as MongoDB
-     
-     User->>Frontend: Select Subject
-     Frontend->>API: GET /api/pdf-titles/:subject
-     API->>DB: Query books by subject
-     DB-->>API: Return book titles
-     API-->>Frontend: JSON response with titles
-     Frontend-->>User: Display PDF titles
-     
-     User->>Frontend: Select PDF books & enter search term
-     User->>Frontend: Click Search
-     Frontend->>API: POST /api/searchquery
-     API->>DB: Query pages by subject,<br/>book titles, and search term
-     DB-->>API: Return matching pages
-     API-->>Frontend: JSON response with results
-     Frontend-->>User: Display search results
-  `;
-
-const entityDiagramDef = `
-  %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 
-  'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff' }}}%%
-classDiagram
-	class PdfBookResult {
-		+String _bookTitle
-		+Number _pageNum
-		+String _sentence
-		+String _pageText
-		+Boolean _isChecked
-		+toString(): String
-	}
-    
-	class Store {
-		+Writable~String~ searchQueryWritable
-		+Writable~String[]~ previousSearchesWritable
-	}
-    
-	class SearchBar {
-		[props] +String selectedSubject
-		[props] +Array~String~ pdfBookTitles
-		[reactive] +String searchQuery
-		[reactive] +Boolean showDropdown
-		[reactive] +Boolean loading
-		+Number pdfLimit
-		+handleSearchDispatch(): Promise~void~
-		+handleInputClick(): void
-		+handleSelectSearch(term: String): void
-		+handleInputKeydown(event: KeyboardEvent): void
-		+handleDelete(searchTerm: String): void
-		+updateSearch(searchWord: String): void
-		+handleClickOutside(event: Event): void
-	}
-    
-	class PageSvelteMain{
-		[props] +Object data
-		  └── dataPdfSubjects: string[]
-		[reactive] +String selectedSubject
-		+Array~String~ setDataPdfSubjects
-		+Writable~String[]~ pdfBooksGetFromSubject
-		[reactive] +Array~String~ pdfBookCheckFromPdfTab
-		[reactive] +Object mySearchData
-		[reactive] +Boolean isLoading
-		+Array~String~ pdfBooksRetFromSearch
-		[reactive] +Array~PdfBookResult~ pdfBooksAsResultObjects
-		[reactive] +String activeTab
-		+Array~PdfBookResult~ checkedResults
-		[reactive] +Boolean isCheckAll
-		[derived] +Number totalCount
-		+openTab(tabName: String): void
-		+handleSubjectChange(event: Event): void
-		+handleLoadPdfTitlesFromSubject(subject: String): Promise~void~
-		+handleLoadingChange(event: CustomEvent~Boolean~): void
-		+handleLoadPdfDataFromPdfTab(event: CustomEvent): void
-		+handleDownloadPdfsForPdfBlock(): void
-		+findSentenceForPdfPage(text: String, subject: String): String
-		+handleCheckboxChangeForPdfBlock(result: PdfBookResult, event: CustomEvent): void
-		+handleCheckAll(event: Event): void
-		+handleDeleteForPdfBlock(event: CustomEvent): void
-	}
-    
-	class PdfBlock {
-		[props] +PdfBookResult result
-		[reactive] +Boolean isExpanded
-		[reactive] +Boolean checked
-		+handleBlockClick(event: CustomEvent): void
-		+handleCheckboxChangeDispatch(event: CustomEvent): void
-		+handleDeleteDispatch(): void
-	}
-    
-	Store --> SearchBar : provides state
-	Store --> PageSvelteMain : provides state
-	PageSvelteMain --> SearchBar : passes props
-	PageSvelteMain --> PdfBlock : passes props
-	PageSvelteMain "1" o-- "many" PdfBookResult : contains
-	PdfBlock "1" -- "1" PdfBookResult : displays`;
   
 </script>
 
@@ -158,23 +75,6 @@ classDiagram
       <h2>Component Diagram</h2>
       <div class="diagram-box">
         <Mermaid definition={componentDiagramDef} type="component"/>
-      </div>
-    </section>
-        <section class="diagram-section">
-      <h2>Sequence Diagram</h2>
-      <div class="diagram-container">
-        <pre class="mermaid">
-          <Mermaid definition={sequenceDiagramDef} type="sequence"/>
-        </pre>
-      </div>
-    </section>
-
-    <section class="diagram-section">
-      <h2>Entity Diagram</h2>
-      <div class="diagram-container">
-        <pre class="mermaid">
-          <Mermaid definition={entityDiagramDef} type="entity"/>
-        </pre>
       </div>
     </section>
   </div>
