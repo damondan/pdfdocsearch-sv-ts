@@ -424,7 +424,7 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
         <PdfBlock
           {result}
           ondelete={handleDeleteForPdfBlock}
-          onchange={(data) => handleCheckboxChangeForPdfBlock(result, data)}
+          onchange={(data: { result: PdfBookResult; checked: boolean }) => handleCheckboxChangeForPdfBlock(result, data)}
         />
       {/each}
     </div>
