@@ -1,14 +1,11 @@
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
-
-	let { result } = $props();
+	let { result, onchange, ondelete } = $props();
 	let isExpanded: boolean = $state(false);
-	const dispatch = createEventDispatcher();
 	let checked = $derived(result?.isChecked ?? false);
 
 	//If the clicked element is inside the .pdf-checkbox - returns without expansion of the page text
 	//Outside of that, the click expands the page text.
-	function handleBlockClick(event: CustomEvent) {
+	function handleBlockClick(event: MouseEvent) {
 		const target = event.target as Element;
 		if (target.closest(".pdf-checkbox")) {
 			return; // Prevent expansion if clicking on checkbox or delete button
@@ -16,17 +13,17 @@
 		isExpanded = !isExpanded;
 	}
 
-	// This is a dispatch which returns result && checked to the parent +page.svelte main page.
-	function handleCheckboxChangeDispatch(event: CustomEvent) {
-		console.log("in handleCheckboxChangeDispatch");
+	// This calls the callback prop which returns result && checked to the parent +page.svelte main page.
+	function handleCheckboxChange(event: Event) {
+		console.log("in handleCheckboxChange");
 		const target = event.target as HTMLInputElement;
 		result.isChecked = target.checked;
-		dispatch("change", { result, checked });
+		onchange?.({ result, checked });
 	}
 
-	// This is a dispatch which returns result to the parent +page.svelte main page.
-	function handleDeleteDispatch() {
-		dispatch("delete", result); // Send the result object to the parent
+	// This calls the callback prop which returns result to the parent +page.svelte main page.
+	function handleDelete() {
+		ondelete?.(result); // Send the result object to the parent
 	}
 </script>
 
@@ -37,7 +34,7 @@
 		class="pdf-checkbox w-4 h-4 mx-3 pr-1 scale-150 cursor-pointer"
 		onchange={(e) => {
 			e.stopPropagation();
-			handleCheckboxChangeDispatch(e);
+			handleCheckboxChange(e);
 		}}
 	/>
 	<p class="m-0 px-3 overflow-hidden break-words whitespace-normal text-base sm:text-lg md:text-xl lg:text-2xl font-bold font-comic tracking-wider2">{result.bookTitle} {result.pageNum} {result.sentence}</p>
@@ -45,7 +42,7 @@
 		class="pdf-delete w-5 h-5 p-0 text-xs leading-5 text-center bg-red-500 hover:bg-red-700 text-white border-none rounded cursor-pointer"
 		onclick={(e) => {
 			e.stopPropagation();
-			handleDeleteDispatch();
+			handleDelete();
 		}}>X</button
 	>
 	{#if isExpanded}

@@ -76,26 +76,22 @@
     }
   }
 
-  //This refers to the spinner - it is an event listener for the +page.svelte component
-  //or parent that is set in the SearchBar component below - on:loadingChange={handleLoadingChange}
-  //SearchBar component dispatches - dispatch('loadingChange', loading); loading is a boolean.
+  //This refers to the spinner - it is a callback function passed to the SearchBar component
+  //SearchBar component calls - onloadingChange?.(loading); loading is a boolean.
   //Below there is an - if isLoading is true or false which displays the spinner.
-  function handleLoadingChange(event: CustomEvent<boolean>): void {
-    isLoading = event.detail;
+  function handleLoadingChange(loading: boolean): void {
+    isLoading = loading;
   }
 
-  //This is also an event listener for +page.svelte or the parent component to the
-  //SearchBar child component. SearchBar below on:searchResults={handleLoadPdfDataFromPdfTab}.
-  //In SearchBar component - dispatch('searchResults', result);
-  //The result is passed as searchResults and when that variable is set with the results,
-  //it executes the below function through it being used as an event listener with the data
-  //in results. mySearchData, being json data, is taken in by mySearchData, which uses 2
-  //interfaces to configure with the json data. Lastly, it steps through the array to
-  //input the pdf attributes into creating a PdfBookResult object that is than stored into
-  //a pdfBooksAsResultObjects array.
-  // Replace the existing handleLoadPdfDataFromPdfTab function with this updated version:
-  function handleLoadPdfDataFromPdfTab(event: CustomEvent): void {
-    mySearchData = event.detail;
+  //This is a callback function passed to the SearchBar child component.
+  //In SearchBar component - onsearchResults?.(result);
+  //The result is passed as an argument and when that variable is set with the results,
+  //it executes the below function with the data in results. mySearchData, being json data,
+  //is taken in by mySearchData, which uses 2 interfaces to configure with the json data.
+  //Lastly, it steps through the array to input the pdf attributes into creating a
+  //PdfBookResult object that is than stored into a pdfBooksAsResultObjects array.
+  function handleLoadPdfDataFromPdfTab(data: ISearchData | string): void {
+    mySearchData = data;
     console.log(
       "Received search results in parent(mySearchData):",
       mySearchData,
@@ -203,22 +199,21 @@
     }
   };
 
-  //handleCheckboxChangeForPdfBlock is an event listener for the +page.svelte component
-  //or parent to the PdfBlock component or child.
-  //Below -> <PdfBlock {result} on:delete={handleDeleteForPdfBlock}
-  //on:change={(e) => handleCheckboxChangeForPdfBlock(result, e)}
-  //The parent listens for a dipatch from PdfBlock -> dispatch('change', { result, checked });
+  //handleCheckboxChangeForPdfBlock is a callback function passed to the PdfBlock component.
+  //Below -> <PdfBlock {result} ondelete={handleDeleteForPdfBlock}
+  //onchange={(data) => handleCheckboxChangeForPdfBlock(result, data)}
+  //The child calls - onchange?.({ result, checked });
   //checkedResults is set with the proper array of PdfBookResult which has been checked
   //in the Results tab.
   function handleCheckboxChangeForPdfBlock(
     result: PdfBookResult,
-    event: CustomEvent,
+    data: { result: PdfBookResult; checked: boolean },
   ): void {
     console.log("IN handleCheckboxChangeForPdfBlock");
-    result.isChecked = event.detail.checked;
+    result.isChecked = data.checked;
     console.log("result is ", result);
 
-    if (event.detail.checked) {
+    if (data.checked) {
       checkedResults.push(result);
       console.log("checkedResults adding ", checkedResults);
     } else {
@@ -259,8 +254,7 @@
     isCheckAll = isAllChecked;
   });
 
-  function handleDeleteForPdfBlock(event: CustomEvent): void {
-    const resultToDelete = event.detail; // Assuming PdfBlock emits the result
+  function handleDeleteForPdfBlock(resultToDelete: PdfBookResult): void {
     pdfBooksAsResultObjects = pdfBooksAsResultObjects.filter(
       (r) => r !== resultToDelete,
     );
@@ -275,8 +269,11 @@
   class="grid grid-cols-3 grid-rows-[auto_auto_auto_1fr_auto] gap-1 bg-gradient-to-b from-primary to-secondary p-1
 min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_header_header'_'download-r-checkall-buttons_tab-bar_pdfsubjects-dropdnlist'_'tab-content_tab-content_tab-content'_'footer_footer_footer']"
 >
+<!--If activeTab is results, show Download button and show Total Count for PdfBlock Results, else show the check all button for pdfs tab-->
   {#if activeTab == "results"}
-    <div class="[grid-area:download-r-checkall-buttons] flex flex-col sm:flex-row justify-start items-start sm:items-end ml-[15%] pb-2 gap-2">
+    <div
+      class="[grid-area:download-r-checkall-buttons] flex flex-col sm:flex-row justify-start items-start sm:items-end ml-[15%] pb-2 gap-2"
+    >
       <input
         type="button"
         id="download-id"
@@ -285,9 +282,13 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
         class="text-base sm:text-lg md:text-xl lg:text-2xl text-white px-4 py-2 cursor-pointer border-[#333333]
         bg-[#3e228c] hover:bg-[#3206de] rounded-md ml-5 mb-1 font-comic shadow-soft"
       />
-      <div class="total-count w-auto sm:w-36 h-auto sm:h-10 ml-5 sm:ml-0 rounded-md">
-        <p class="w-full text-black font-comic font-light text-base sm:text-lg md:text-xl lg:text-2xl text-left sm:text-center
-           overflow-visible whitespace-nowrap m-0">
+      <div
+        class="total-count w-auto sm:w-36 h-auto sm:h-10 ml-5 sm:ml-0 rounded-md"
+      >
+        <p
+          class="w-full text-black font-comic font-light text-base sm:text-lg md:text-xl lg:text-2xl text-left sm:text-center
+           overflow-visible whitespace-nowrap m-0"
+        >
           Results {totalCount}
         </p>
       </div>
@@ -305,25 +306,8 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
       />
     </div>
   {/if}
-  <div class="header [grid-area:header] text-blue-500 text-center">
-    <h1
-      class="font-comic text-6xl text-white tracking-wider font-normal"
-      style="text-shadow: 0px 8px 8px rgba(0, 0, 0, 0.3);"
-    >
-      Pdf Search TS
-    </h1>
-    <SearchBar
-      {selectedSubject}
-      pdfBookTitles={pdfBookCheckFromPdfTab}
-      on:searchResults={handleLoadPdfDataFromPdfTab}
-      on:loadingChange={handleLoadingChange}
-    />
-    {#if isLoading}
-      <div class="spinner-overlay tw-spinner-overlay">
-        <div class="spinner custom-spinner"></div>
-      </div>
-    {/if}
-  </div>
+
+  <!--If activeTab does not equal results and thus in pdfs tab, show Pdf Subject options-->
   {#if activeTab !== "results"}
     <div
       class="pdfsubjects-dropdnlist [grid-area:pdfsubjects-dropdnlist] text-base flex
@@ -339,7 +323,6 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
         onchange={handleSubjectChange}
         class="w-full p-1 border border-gray-300 rounded-md bg-gray-100 text-base sm:text-lg md:text-xl lg:text-2xl font-comic"
       >
-        <!-- <option value="" disabled>Select a subject</option> -->
         {#each setDataPdfSubjects as pdfSubject}
           <option
             id="pdfsubject"
@@ -350,6 +333,29 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
       </select>
     </div>
   {/if}
+
+  <!--Title of App - Pdf Search TS, with SearchBar and spinner-->
+  <div class="header [grid-area:header] text-blue-500 text-center">
+    <h1
+      class="font-comic text-6xl text-white tracking-wider font-normal"
+      style="text-shadow: 0px 8px 8px rgba(0, 0, 0, 0.3);"
+    >
+      Pdf Search TS
+    </h1>
+    <SearchBar
+      {selectedSubject}
+      pdfBookTitles={pdfBookCheckFromPdfTab}
+      onsearchResults={handleLoadPdfDataFromPdfTab}
+      onloadingChange={handleLoadingChange}
+    />
+    {#if isLoading}
+      <div class="spinner-overlay tw-spinner-overlay">
+        <div class="spinner custom-spinner"></div>
+      </div>
+    {/if}
+  </div>
+
+  <!--Tab bar with tab choices of Pdfs and Results-->
   <div
     class="tab-bar [grid-area:tab-bar] w-full flex justify-center bg-white
        h-10 rounded-md mt-2"
@@ -375,6 +381,7 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
       </a>
     </div>
   </div>
+  <!--Tab content area or either Pdfs or Results-->
   <div
     class="tab-content [grid-area:tab-content] w-[90%] ml-[5%] mr-[5%] bg-white p-2 rounded-lg mt-3"
   >
@@ -398,8 +405,9 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
               />
               <label
                 for={title}
-                class="pdf-title-label text-base sm:text-lg md:text-xl lg:text-2xl font-bold font-comic tracking-wider2 break-words overflow-wrap-anywhere leading-tight flex-1 cursor-pointer min-w-0 max-w-full overflow-hidden"
-                >{title}</label
+                class="pdf-title-label text-base sm:text-lg md:text-xl lg:text-2xl font-bold
+              font-comic tracking-wider2 break-words overflow-wrap-anywhere leading-tight flex-1
+              cursor-pointer min-w-0 max-w-full overflow-hidden">{title}</label
               >
             </li>
           {/each}
@@ -415,8 +423,8 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
       {#each pdfBooksAsResultObjects as result}
         <PdfBlock
           {result}
-          on:delete={handleDeleteForPdfBlock}
-          on:change={(e) => handleCheckboxChangeForPdfBlock(result, e)}
+          ondelete={handleDeleteForPdfBlock}
+          onchange={(data) => handleCheckboxChangeForPdfBlock(result, data)}
         />
       {/each}
     </div>
