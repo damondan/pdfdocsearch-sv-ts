@@ -11,7 +11,7 @@
 
   let selectedSubject = $state("");
   let { data }: { data: { dataPdfSubjects: string[] } } = $props();
-  let setDataPdfSubjects: string[] = data.dataPdfSubjects;
+  let setDataPdfSubjects: string[] = $state(data.dataPdfSubjects);
   let pdfBooksGetFromSubject: Writable<string[]> = writable([]);
   let pdfBookCheckFromPdfTab: string[] = $state([]);
   let mySearchData = $state<ISearchData | string>({
@@ -35,6 +35,7 @@
     if (setDataPdfSubjects.length > 0) {
       console.log("In onMount");
       setDataPdfSubjects = [...setDataPdfSubjects].reverse();
+      console.log("setDataPdfSubjects is " + setDataPdfSubjects);
       selectedSubject = setDataPdfSubjects[0]; // Set default to the first subject
 
       // Automatically trigger the fetch for the first subject
