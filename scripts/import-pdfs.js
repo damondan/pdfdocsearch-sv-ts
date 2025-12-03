@@ -6,6 +6,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { MongoClient } from 'mongodb';
+import readline from 'readline';
 // CHANGED: Added ES module imports for __dirname replacement
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -73,6 +74,35 @@ async function close() {
   }
 }
 
+// Function to prompt user for input
+function promptUser(question) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      rl.close();
+      resolve(answer.trim().toUpperCase());
+    });
+  });
+}
+
+// Function to clear existing data from collections
+async function clearCollections() {
+  const database = await connect();
+  const booksCollection = database.collection('books');
+  const pagesCollection = database.collection('pages');
+  
+  console.log('\nClearing existing data...');
+  
+  const booksResult = await booksCollection.deleteMany({});
+  const pagesResult = await pagesCollection.deleteMany({});
+  
+  console.log(`Deleted ${booksResult.deletedCount} books and ${pagesResult.deletedCount} pages.`);
+}
+
 // Direct database operations (replacing model calls)
 const bookModel = {
   async upsertBook(bookData) {
@@ -120,8 +150,20 @@ const pageModel = {
 // Main import function
 async function importPdfs() {
   try {
+    // Prompt user for append or clear mode
+    const response = await promptUser('Will this DB data be appended? (Y/N): ');
+    
     // Connect to MongoDB Atlas
     await connect();
+    
+    // If user chose 'N', clear existing data
+    if (response === 'N') {
+      await clearCollections();
+    } else if (response === 'Y') {
+      console.log('\nAppending to existing data...');
+    } else {
+      console.log('\nInvalid response. Defaulting to append mode.');
+    }
     
     // Create necessary indexes
     await pageModel.createIndexes();
