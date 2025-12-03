@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 
 vi.mock('$layout', () => ({
 	load: vi.fn().mockResolvedValue({
-	  dataPdfSubjects: ['Codoh', 'Jung']
+	  dataPdfSubjects: ['ProgramLanguages', 'Science', 'Art', 'Psychology']
 	})
   }));
 

@@ -131,7 +131,7 @@ async function importPdfs() {
     const baseDir = path.join(__dirname, '..');
     
     // Specify the subject folders we're looking for
-    const subjectFolders = ['ProgramLanguages', 'NonFiction', 'Jung'];
+    const subjectFolders = ['ProgramLanguages', 'Science', 'Art', 'Psychology'];
     const subjects = [];
     
     // Check if each subject folder exists
