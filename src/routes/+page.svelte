@@ -34,7 +34,9 @@
   onMount(() => {
     if (setDataPdfSubjects.length > 0) {
       console.log("In onMount");
+      setDataPdfSubjects = [...setDataPdfSubjects].reverse();
       selectedSubject = setDataPdfSubjects[0]; // Set default to the first subject
+
       // Automatically trigger the fetch for the first subject
       handleLoadPdfTitlesFromSubject(selectedSubject);
     }

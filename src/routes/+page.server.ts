@@ -7,8 +7,8 @@ import { getSubjects } from '../db/models/book';
  */
 export const load: PageServerLoad = async () => {
   try {
-    const pdfSubjects = await getSubjects();
-    const dataPdfSubjects = [...pdfSubjects].reverse;
+    const dataPdfSubjects = await getSubjects();
+   
     return { dataPdfSubjects };
   } catch (error) {
     console.error('Load function error:', error);
