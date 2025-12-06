@@ -14,7 +14,10 @@ let cachedDb: Db | null = null;
 console.log('📍 REACHED: mongodb.ts - Module loading');
 const uri = process.env.MONGODB_URI;
 console.log('📍 ENV CHECK: MONGODB_URI exists?', !!uri);
+console.log('📍 ENV CHECK: MONGODB_URI length:', uri?.length || 0);
+console.log('📍 ENV CHECK: MONGODB_URI masked:', uri ? uri.substring(0, 25) + '...' + uri.substring(uri.length - 20) : 'undefined');
 console.log('📍 ENV CHECK: MONGODB_DATABASE exists?', !!process.env.MONGODB_DATABASE);
+console.log('📍 ENV CHECK: MONGODB_DATABASE value:', process.env.MONGODB_DATABASE);
 if (!uri) {
   console.log('❌ ERROR: MONGODB_URI is not set!');
   throw new Error("MONGODB_URI environment variable is not set!");
