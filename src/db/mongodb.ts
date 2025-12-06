@@ -1,9 +1,6 @@
 // src/db/mongodb.ts - Serverless MongoDB Connection
 import { MongoClient, Db, Collection } from 'mongodb';
 
-const MONGODB_URI = "mongodb+srv://damon5185:D27934GvIkHalIef@clustersearchpdf.37gzhel.mongodb.net/?retryWrites=true&w=majority&appName=ClusterSearchPdf";
-const MONGODB_DATABASE = "pdf_search_db";
-
 /**
  * Cached MongoDB client instance for connection reuse
  */
@@ -21,24 +18,24 @@ let cachedDb: Db | null = null;
  * @throws When connection to MongoDB fails
  */
 async function connect(): Promise<Db> {
-  // if (cachedDb && process.env.MONGODB_URI) {
-  //   console.log('Reusing cached MongoDB connection');
-  //   return cachedDb;
-  // }
+  if (cachedDb && process.env.MONGODB_URI) {
+    console.log('Reusing cached MongoDB connection');
+    return cachedDb;
+  }
 
-  // if (!process.env.MONGODB_URI) {
-  //   throw new Error('MONGODB_URI is not defined in environment variables');
-  // }
+  if (!process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI is not defined in environment variables');
+  }
 
-  //const client = new MongoClient(process.env.MONGODB_URI);
- const client = new MongoClient(MONGODB_URI);
+  const client = new MongoClient(process.env.MONGODB_URI);
+  //const client = new MongoClient(MONGODB_URI);
   try {
     await client.connect();
     console.log('Connected to MongoDB Atlas');
 
     // Use the database from environment variable
-    //const db = client.db(process.env.MONGODB_DATABASE);
-    const db = client.db(MONGODB_DATABASE);
+    const db = client.db(process.env.MONGODB_DATABASE);
+    //const db = client.db(MONGODB_DATABASE);
 
     // Debug information
     const adminDb = client.db().admin();
