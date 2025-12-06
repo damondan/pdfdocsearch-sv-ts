@@ -8,10 +8,12 @@ const COLLECTION = 'books';
  * @returns {Promise<string[]>} Array of subject names
  */
 export async function getSubjects():Promise<string[]> {
+  console.log('📍 REACHED: book.ts getSubjects() - START');
   const collection = await getCollection(COLLECTION);
-  console.log("In getSubjects and returns distinct subject" +
-    "which is a field in books table");
-  return collection.distinct('subject');
+  console.log('📍 REACHED: book.ts getSubjects() - Got collection, calling distinct');
+  const result = await collection.distinct('subject');
+  console.log('📍 REACHED: book.ts getSubjects() - SUCCESS, returning:', result);
+  return result;
 }
 
 /**

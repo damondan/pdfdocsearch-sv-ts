@@ -11,10 +11,15 @@ let cachedClient: MongoClient | null = null;
  */
 let cachedDb: Db | null = null;
 
+console.log('📍 REACHED: mongodb.ts - Module loading');
 const uri = process.env.MONGODB_URI;
+console.log('📍 ENV CHECK: MONGODB_URI exists?', !!uri);
+console.log('📍 ENV CHECK: MONGODB_DATABASE exists?', !!process.env.MONGODB_DATABASE);
 if (!uri) {
+  console.log('❌ ERROR: MONGODB_URI is not set!');
   throw new Error("MONGODB_URI environment variable is not set!");
 }
+console.log('📍 REACHED: Creating MongoClient instance');
 const client = new MongoClient(uri);
 
 /**
@@ -24,18 +29,21 @@ const client = new MongoClient(uri);
  * @throws When connection to MongoDB fails
  */
 async function connect(): Promise<Db> {
+  console.log('📍 REACHED: mongodb.ts connect() - START');
   if (cachedDb && uri) {
-    console.log('Reusing cached MongoDB connection');
+    console.log('📍 REACHED: Reusing cached MongoDB connection');
     return cachedDb;
   }
 
   if (!uri) {
+    console.log('❌ ERROR: MONGODB_URI is not defined');
     throw new Error('MONGODB_URI is not defined in environment variables');
   }
 
   try {
+    console.log('📍 REACHED: Attempting to connect to MongoDB...');
     await client.connect();
-    console.log('Connected to MongoDB Atlas');
+    console.log('✅ SUCCESS: Connected to MongoDB Atlas');
 
     // Use the database from environment variable
     const db = client.db(process.env.MONGODB_DATABASE);
@@ -55,7 +63,8 @@ async function connect(): Promise<Db> {
     
     return db;
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error('❌ ERROR: MongoDB connection failed:', error);
+    console.error('❌ ERROR: Error message:', error instanceof Error ? error.message : 'Unknown error');
     // Reset cache on error to allow retry
     cachedClient = null;
     cachedDb = null;
