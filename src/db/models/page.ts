@@ -1,5 +1,5 @@
-import { getCollection } from '../mongodb.js';
-import type { PageResult, PageData } from '$lib/types.js';
+import { getCollection } from '../mongodb';
+import type { PageResult, PageData } from '$lib/types.ts';
 
 const COLLECTION = 'pages';
 

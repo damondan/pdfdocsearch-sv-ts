@@ -1,5 +1,5 @@
-import { getCollection } from '../../db/mongodb.js';
-import type { BookData }  from '$lib/types.js'
+import { getCollection } from '../../db/mongodb';
+import type { BookData }  from '$lib/types.ts'
 
 const COLLECTION = 'books';
 

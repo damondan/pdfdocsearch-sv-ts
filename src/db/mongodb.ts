@@ -11,6 +11,12 @@ let cachedClient: MongoClient | null = null;
  */
 let cachedDb: Db | null = null;
 
+const uri = process.env.MONGODB_URI;
+if (!uri) {
+  throw new Error("MONGODB_URI environment variable is not set!");
+}
+const client = new MongoClient(uri);
+
 /**
  * Connect to MongoDB with connection caching for serverless
  * @returns MongoDB database instance
@@ -18,17 +24,15 @@ let cachedDb: Db | null = null;
  * @throws When connection to MongoDB fails
  */
 async function connect(): Promise<Db> {
-  if (cachedDb && process.env.MONGODB_URI) {
+  if (cachedDb && uri) {
     console.log('Reusing cached MongoDB connection');
     return cachedDb;
   }
 
-  if (!process.env.MONGODB_URI) {
+  if (!uri) {
     throw new Error('MONGODB_URI is not defined in environment variables');
   }
 
-  const client = new MongoClient(process.env.MONGODB_URI);
-  //const client = new MongoClient(MONGODB_URI);
   try {
     await client.connect();
     console.log('Connected to MongoDB Atlas');
