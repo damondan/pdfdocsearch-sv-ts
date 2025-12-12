@@ -13,6 +13,7 @@ let cachedDb: Db | null = null;
 
 console.log('📍 REACHED: mongodb.ts - Module loading');
 const uri = process.env.MONGODB_URI;
+
 console.log('📍 ENV CHECK: MONGODB_URI exists?', !!uri);
 console.log('📍 ENV CHECK: MONGODB_URI length:', uri?.length || 0);
 console.log('📍 ENV CHECK: MONGODB_URI masked:', uri ? uri.substring(0, 25) + '...' + uri.substring(uri.length - 20) : 'undefined');

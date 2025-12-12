@@ -16,7 +16,7 @@ const COLLECTION = 'pages';
  * @param {string[]} bookTitles Array of book titles to search
  * @returns {Promise<Object.<string, PageResult[]>>} Results grouped by book title
  */
-export async function searchPages(subject:string, searchQuery: string, bookTitles: string[]): Promise<Record<string, PageResult[]>> {
+export async function searchPages(subject:string, searchQuery: string, bookTitles: string[]): Promise<Record<string, (PageResult | null)[]>> {
   const collection = await getCollection(COLLECTION);
   
   const wordRegex = new RegExp(`\\b${searchQuery}\\b`, 'i');
@@ -27,23 +27,40 @@ export async function searchPages(subject:string, searchQuery: string, bookTitle
     text: wordRegex
   };
   
-  const pages = await collection.find(query).toArray();
+  const matchedPages = await collection.find(query).toArray();
   
-  /** @type {Record<string, PageResult[]>} */
-  const results: Record<string, PageResult[]> = {};
+  const results: Record<string, (PageResult | null)[]> = {};
   
-  for (const page of pages) {
-    const { bookTitle, pageNum, text } = page;
+  // Step 2: For each match, fetch adjacent pages
+  for (const match of matchedPages) {
+    const { bookTitle, pageNum, text } = match;
     
     if (!results[bookTitle]) {
       results[bookTitle] = [];
     }
     
-    results[bookTitle].push({ pageNum, text });
+    // Fetch previous page (pageNum - 1)
+    const prevPage = await collection.findOne({
+      subject: subject,
+      bookTitle: bookTitle,
+      pageNum: pageNum - 1
+    });
+    
+    // Fetch next page (pageNum + 1)
+    const nextPage = await collection.findOne({
+      subject: subject,
+      bookTitle: bookTitle,
+      pageNum: pageNum + 1
+    });
+    
+    // Add carousel group: [prev, match, next]
+    results[bookTitle].push(
+      prevPage ? { pageNum: prevPage.pageNum, text: prevPage.text } : null,
+      { pageNum, text },
+      nextPage ? { pageNum: nextPage.pageNum, text: nextPage.text } : null
+    );
   }
   
-  const firstText = Object.values(results)[0][0].text;
-  console.log("First text of book one is " + firstText);
   return results;
 }
 
