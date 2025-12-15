@@ -1,6 +1,5 @@
 // scripts/import-pdfs.js
-const ATLAS_URI = 'mongodb+srv://damon5185:D27934GvIkHalIef@clustersearchpdf.37gzhel.mongodb.net/?retryWrites=true&w=majority&appName=ClusterSearchPdf';
-
+const ATLAS_URI = 'mongodb+srv://damon5185:d4a1m13o15n14@clustersearchpdf.37gzhel.mongodb.net/?appName=ClusterSearchPdf';
 // ES Module imports (changed from require)
 import fs from 'fs/promises';
 import path from 'path';
