@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types';
-import { getBookTitlesBySubject } from '../../../../db/models/book';
+import { getBookTitlesBySubject, getBooksWithTOCBySubject } from '../../../../db/models/book';
 
 /**
  * SvelteKit API route handler for getting PDF titles by subject
@@ -19,7 +19,7 @@ export const GET: RequestHandler = async ({ request, params }) => {
       });
     }
 
-    const pdfTitles = await getBookTitlesBySubject(subject);
+    const pdfTitles = await getBooksWithTOCBySubject(subject);
     
     return new Response(JSON.stringify(pdfTitles), {
       status: 200,

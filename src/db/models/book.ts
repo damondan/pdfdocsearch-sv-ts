@@ -28,6 +28,20 @@ export async function getBookTitlesBySubject(subject: string): Promise<string[]>
 }
 
 /**
+ * Get book titles with table of contents by subject
+ * @param {string} subject The subject to filter by
+ * @returns {Promise<BookWithTOC[]>} Array of books with titles and TOC
+ */
+export async function getBooksWithTOCBySubject(subject: string): Promise<import('$lib/types').BookWithTOC[]> {
+  const collection = await getCollection(COLLECTION);
+  const books = await collection.find({ subject }, { projection: { bookTitle: 1, tableOfContents: 1, _id: 0 } }).toArray();
+  return books.map(book => ({
+    bookTitle: book.bookTitle,
+    tableOfContents: book.tableOfContents
+  }));
+}
+
+/**
  * Get all books by subject
  * @param {string} subject The subject to filter by
  * @returns {Promise<Object[]>} Array of book documents

@@ -8,11 +8,12 @@
   import { PdfBookResult } from "$lib/classes/PdfBookResult";
   import { searchQueryWritable } from "$lib/store";
   import type { ISearchData } from "$lib";
+  import type { BookWithTOC } from '$lib/types.ts';
 
   let selectedSubject = $state("");
   let { data }: { data: { dataPdfSubjects: string[] } } = $props();
   let setDataPdfSubjects: string[] = $state(data.dataPdfSubjects);
-  let pdfBooksGetFromSubject: Writable<string[]> = writable([]);
+  let pdfBooksGetFromSubject: Writable<BookWithTOC[]> = writable([]);
   let pdfBookCheckFromPdfTab: string[] = $state([]);
   let mySearchData = $state<ISearchData | string>({
     message: "",
@@ -29,6 +30,7 @@
   let isCheckAllResults: boolean = $state(false);
   let isCheckAll: boolean = $state(false);
   let pdfLimit: number = 25;
+  let expandedBookTitle: string | null = $state(null);
   let totalCount = $derived(pagesReturned_pdfBookResults.length / 3);
 
   function getCarouselGroupForMatch(
@@ -85,8 +87,8 @@
     try {
       pagesReturned_pdfBookResults = [];
       const response = await fetch(`/api/pdf-titles/${subject}`);
-      // Assuming the response is an array of PdfBookResult
-      const data: string[] = await response.json();
+      // Assuming the response is an array of BookWithTOC
+      const data: BookWithTOC[] = await response.json();
 
       pdfBooksGetFromSubject.set(data || []);
     } catch (error) {
@@ -387,10 +389,18 @@
     isCheckAll = target.checked;
 
     if (isCheckAll) {
-      pdfBookCheckFromPdfTab = $pdfBooksGetFromSubject;
+      pdfBookCheckFromPdfTab = $pdfBooksGetFromSubject.map(book => book.bookTitle);
     } else {
       pdfBookCheckFromPdfTab = [];
     }
+  }
+
+  function toggleBookExpansion(bookTitle: string): void {
+    console.log('🔵 Toggle clicked for:', bookTitle);
+    console.log('🔵 Current expandedBookTitle:', expandedBookTitle);
+    console.log('🔵 All books:', $pdfBooksGetFromSubject);
+    expandedBookTitle = expandedBookTitle === bookTitle ? null : bookTitle;
+    console.log('🔵 New expandedBookTitle:', expandedBookTitle);
   }
 
   let isAllChecked = $derived(
@@ -559,23 +569,48 @@ min-h-screen relative [grid-template-areas:'routing_routing_routing'_'header_hea
     >
       {#if $pdfBooksGetFromSubject.length > 0}
         <ul class="pdf-titles-list list-none p-0 m-0 text-left w-full">
-          {#each $pdfBooksGetFromSubject as title}
-            <li
-              class="pdf-title-block mb-2 border-b border-gray-300 pb-1 hover:bg-gray-100 flex items-start gap-2 w-full max-w-full"
-            >
-              <input
-                type="checkbox"
-                id={title}
-                class="pdf-title-item w-4 h-4 mt-1 scale-150 cursor-pointer flex-shrink-0"
-                bind:group={pdfBookCheckFromPdfTab}
-                value={title}
-              />
-              <label
-                for={title}
-                class="pdf-title-label text-base sm:text-lg md:text-xl lg:text-2xl font-bold
-              font-comic tracking-wider2 break-words overflow-wrap-anywhere leading-tight flex-1
-              cursor-pointer min-w-0 max-w-full overflow-hidden">{title}</label
+          {#each $pdfBooksGetFromSubject as book}
+            <li class="pdf-title-block mb-2 border-b border-gray-300 w-full max-w-full">
+              <!-- DEBUG: Book data -->
+              <!-- {JSON.stringify(book)} -->
+              <div 
+                class="flex items-start gap-2 pb-1 hover:bg-gray-100 w-full max-w-full cursor-pointer"
+                onclick={() => toggleBookExpansion(book.bookTitle)}
+                role="button"
+                tabindex="0"
+                style="color: {expandedBookTitle === book.bookTitle ? 'blue' : 'inherit'};"
               >
+                <input
+                  type="checkbox"
+                  id={book.bookTitle}
+                  class="pdf-title-item w-4 h-4 mt-1 scale-150 cursor-pointer flex-shrink-0"
+                  bind:group={pdfBookCheckFromPdfTab}
+                  value={book.bookTitle}
+                  onclick={(e) => e.stopPropagation()}
+                />
+                <span
+                  class="pdf-title-label text-base sm:text-lg md:text-xl lg:text-2xl font-bold
+                font-comic tracking-wider2 break-words overflow-wrap-anywhere leading-tight flex-1
+                min-w-0 max-w-full overflow-hidden"
+                >{book.bookTitle}</span
+                >
+              </div>
+              
+              <!-- Expandable Table of Contents -->
+              {#if expandedBookTitle === book.bookTitle && book.tableOfContents && book.tableOfContents.length > 0}
+                <div class="toc-expansion bg-gray-50 p-4 mt-2 rounded border border-gray-200">
+                  <h3 class="text-lg font-bold mb-2 font-comic">Book Context</h3>
+                  <ul class="list-none p-0 m-0">
+                    {#each book.tableOfContents as entry}
+                      <li class="py-1 text-sm sm:text-base font-comic">{entry}</li>
+                    {/each}
+                  </ul>
+                </div>
+              {:else if expandedBookTitle === book.bookTitle && (!book.tableOfContents || book.tableOfContents.length === 0)}
+                <div class="toc-expansion bg-gray-50 p-4 mt-2 rounded border border-gray-200">
+                  <p class="text-gray-500 italic font-comic">No table of contents available for this book.</p>
+                </div>
+              {/if}
             </li>
           {/each}
         </ul>
