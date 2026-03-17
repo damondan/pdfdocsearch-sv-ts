@@ -11,11 +11,7 @@
 	let loading: boolean = $state(false);
 	const pdfLimit: number = 40;
 
-	// THis is a dispatch to the parent +page.svelte.
 	// Replace the existing handleSearchDispatch function with this updated version:
-
-	// Replace the existing handleSearchDispatch function with this updated version:
-
 	async function handleSearchDispatch() {
 		searchQueryWritable.set(searchQuery);
 
