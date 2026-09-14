@@ -411,13 +411,21 @@
     isCheckAll = isAllChecked;
   });
 
-  function handleDeleteForPdfBlock(result: PdfBookResult): void {
-    const idx = pagesReturned_pdfBookResults.indexOf(result);
-    if (idx !== -1 && idx % 3 === 1) {
-      // Remove the carousel group: [prev, match, next]
-      pagesReturned_pdfBookResults.splice(idx - 1, 3);
-    }
-  }
+	function handleDeleteForPdfBlock(result: PdfBookResult): void {
+		const idx = pagesReturned_pdfBookResults.indexOf(result);
+
+		if (idx === -1 || idx % 3 !== 1) {
+			return;
+		}
+
+		// Remove [previous, matched, next]
+		pagesReturned_pdfBookResults.splice(idx - 1, 3);
+
+		// Rebuild list containing only matched/current pages
+		pagesReturnedFromSearch_pdfBookResults = pagesReturned_pdfBookResults.filter(
+			(page, index): page is PdfBookResult => index % 3 === 1 && page !== null
+		);
+	}
 </script>
 
 <svelte:head>
